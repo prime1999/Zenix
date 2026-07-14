@@ -23,6 +23,10 @@
 ```text
 User
   ↓
+Middleware
+  ↓
+Auth Check
+  ↓
 Next.js App
   ↓
 Supabase Auth
@@ -55,8 +59,11 @@ Dashboard
 │   ├── architecture.md
 │   ├── build-plan.md
 │   ├── database-schema.md
+│   ├── code-standards.md
 │   ├── ui-rules.md
-│   └── progress-tracker.md
+│   ├── ui-tokens.md
+│   ├── ui-registry.md
+│   └── project-tracker.md
 │
 ├── app/
 │   ├── auth/
@@ -71,25 +78,25 @@ Dashboard
 │   ├── protected/
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
-│   │   │
+│   │
 │   │   ├── consultation/
 │   │   │   └── page.tsx
-│   │   │
+│   │
 │   │   ├── future-self/
 │   │   │   └── page.tsx
-│   │   │
+│   │
 │   │   ├── roadmap/
 │   │   │   └── page.tsx
-│   │   │
+│   │
 │   │   ├── goals/
 │   │   │   └── page.tsx
-│   │   │
+│   │
 │   │   ├── projects/
 │   │   │   └── page.tsx
-│   │   │
+│   │
 │   │   ├── lock-in/
 │   │   │   └── page.tsx
-│   │   │
+│   │
 │   │   └── profile/
 │   │       └── page.tsx
 │   │
@@ -111,6 +118,19 @@ Dashboard
 │   ├── roadmap.ts
 │   └── goals.ts
 │
+├── data/
+│   ├── profile.ts
+│   ├── consultation.ts
+│   ├── future-self.ts
+│   ├── roadmap.ts
+│   └── goals.ts
+│
+├── hooks/
+│   ├── useProfile.ts
+│   ├── useConsultation.ts
+│   ├── useRoadmap.ts
+│   └── useGoals.ts
+│
 ├── components/
 │   ├── ui/
 │   ├── auth/
@@ -131,8 +151,6 @@ Dashboard
 │   ├── gemini.ts
 │   └── utils.ts
 │
-├── hooks/
-│
 ├── types/
 │
 └── middleware.ts
@@ -142,16 +160,17 @@ Dashboard
 
 # System Boundaries
 
-| Folder        | Owns                                                         |
-| ------------- | ------------------------------------------------------------ |
-| `app/`        | Pages, layouts, and API routes only. No business logic.      |
-| `components/` | UI only. No direct database access.                          |
-| `actions/`    | Server Actions and user-triggered mutations.                 |
-| `ai/`         | AI workflows, prompt orchestration, and generation logic.    |
-| `lib/`        | External services, SDK initialization, and shared utilities. |
-| `hooks/`      | Shared React hooks.                                          |
-| `types/`      | Shared TypeScript types across the application.              |
-| `context/`    | Project documentation and source of truth.                   |
+| Folder        | Owns                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| `app/`        | Pages, layouts, and API routes only. No business logic.                                                      |
+| `components/` | UI only. May consume data through React Query, Zustand, or props. Never communicates directly with Supabase. |
+| `actions/`    | Server Actions and user-triggered mutations.                                                                 |
+| `data/`       | Database access layer. Queries, inserts, updates, and deletes only.                                          |
+| `ai/`         | AI workflows, prompt orchestration, and generation logic.                                                    |
+| `hooks/`      | React Query hooks and client-side state integration.                                                         |
+| `lib/`        | External services, SDK initialization, and shared utilities.                                                 |
+| `types/`      | Shared TypeScript types across the application.                                                              |
+| `context/`    | Project documentation and source of truth.                                                                   |
 
 ---
 
@@ -166,9 +185,15 @@ Supabase Auth
         ↓
 Create Profile Record
         ↓
-Check onboarding status
+Check onboarding_completed
+
+false
         ↓
-Consultation or Dashboard
+Consultation
+
+true
+        ↓
+Dashboard
 ```
 
 ---
@@ -424,8 +449,12 @@ context/
 ├── architecture.md
 ├── build-plan.md
 ├── database-schema.md
+├── code-standards.md
 ├── ui-rules.md
-└── progress-tracker.md
+├── ui-tokens.md
+├── ui-registry.md
+├── library-docs.md
+└── project-tracker.md
 ```
 
 All major architecture, product, database, and implementation decisions must be reflected in the appropriate context file.
@@ -434,8 +463,10 @@ All major architecture, product, database, and implementation decisions must be 
 
 # Invariants
 
-- Components never access Supabase directly.
+- Components may consume data through Props, React Query, Zustand, or Context.
+- Components must never communicate directly with Supabase.
 - All database writes happen through Server Actions or API Routes.
+- All database access must go through the `data/` layer.
 - AI logic exists only inside `/ai`.
 - Pages contain no business logic.
 - Every query must be scoped to the authenticated user.
@@ -443,7 +474,6 @@ All major architecture, product, database, and implementation decisions must be 
 - Roadmaps cannot be generated until a Future Self exists.
 - Lock-In cycles must be linked to roadmap milestones.
 - Gemini outputs must be validated before persistence.
-<!-- - Database changes must be reflected in `context/database-schema.md`. -->
 - Protected routes must always verify authentication.
 - All AI outputs must be stored in structured formats before persistence.
 - No feature should bypass the Consultation → Identity → Vision → Future Self flow.

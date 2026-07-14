@@ -1,6 +1,6 @@
 # Code Standards
 
-Implementation rules and conventions for the entire Zent codebase.
+Implementation rules and conventions for the entire Zenix codebase.
 
 The AI agent must follow these rules in every session without exception.
 
@@ -14,37 +14,52 @@ The AI agent operates as a senior software engineer.
 
 ### Think Before Implementing
 
-* Read all relevant context files before writing code
-* Understand the feature before implementation
-* Never make assumptions about business logic
-* Verify requirements against project-overview.md and architecture.md
+- Read all relevant context files before writing code
+- Understand the feature before implementation
+- Never make assumptions about business logic
+- Verify requirements against project-overview.md and architecture.md
+
+### Architecture First
+
+Before implementing any feature:
+
+- Read architecture.md
+- Read build-plan.md
+- Read database-schema.md
+- Read ui-rules.md
+- Read ui-tokens.md
+- Read ui-registry.md
+- Read library-docs.md
+- Read project-tracker.md
+
+Never implement code without understanding the current architecture.
 
 ### Scope Is Sacred
 
-* Build only what the current feature requires
-* Never implement future features proactively
-* Never add functionality that was not requested
-* Avoid speculative abstractions
+- Build only what the current feature requires
+- Never implement future features proactively
+- Never add functionality that was not requested
+- Avoid speculative abstractions
 
 ### Build Incrementally
 
-* Complete one feature before moving to the next
-* Every feature must be testable
-* Every feature must be reviewable
-* UI first, logic second
+- Complete one feature before moving to the next
+- Every feature must be testable
+- Every feature must be reviewable
+- UI first, logic second
 
 ### Prefer Simplicity
 
-* Clear code over clever code
-* Readability over abstraction
-* Explicit over implicit
-* Junior developers should understand every implementation
+- Clear code over clever code
+- Readability over abstraction
+- Explicit over implicit
+- Junior developers should understand every implementation
 
 ### Fail Gracefully
 
-* Every async operation must handle failures
-* Never allow one failure to crash unrelated systems
-* User-facing errors must remain human-readable
+- Every async operation must handle failures
+- Never allow one failure to crash unrelated systems
+- User-facing errors must remain human-readable
 
 ---
 
@@ -56,14 +71,14 @@ TypeScript strict mode is enabled.
 
 ### Rules
 
-* Never use `any`
-* Use `unknown` and narrow safely
-* Explicitly type function parameters
-* Explicitly type return values
-* Prefer `type` over `interface`
-* Use `interface` only when extension is required
-* Prefer `const`
-* Use `let` only when reassignment is necessary
+- Never use `any`
+- Use `unknown` and narrow safely
+- Explicitly type function parameters
+- Explicitly type return values
+- Prefer `type` over `interface`
+- Use `interface` only when extension is required
+- Prefer `const`
+- Use `let` only when reassignment is necessary
 
 ### Async Functions
 
@@ -85,11 +100,11 @@ Never allow unhandled promise rejections.
 
 ### Framework
 
-* Next.js App Router
-* React 19
-* TypeScript
-* Tailwind CSS
-* shadcn/ui
+- Next.js App Router
+- React 19
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
 
 ### Server Components
 
@@ -103,19 +118,30 @@ Only use:
 
 when required for:
 
-* useState
-* useReducer
-* useEffect
-* Browser APIs
-* Event listeners
-* Client-only libraries
+- useState
+- useReducer
+- useEffect
+- Browser APIs
+- Event listeners
+- Client-only libraries
 
 ### Data Fetching
 
-* Fetch data in Server Components
-* Never fetch directly inside Client Components
-* Route Handlers should remain thin
-* Business logic belongs outside route handlers
+Server Components may fetch initial data.
+
+Client Components may consume data through:
+
+- TanStack Query
+- Zustand
+- Props
+
+Client Components must never communicate directly with Supabase.
+
+All database access must flow through:
+
+```text
+data/
+```
 
 ### Server Actions
 
@@ -126,6 +152,85 @@ actions/
 ```
 
 Never define them inline.
+
+---
+
+# Database Layer
+
+All database access belongs inside:
+
+```text
+data/
+```
+
+Examples:
+
+```text
+data/profile.ts
+data/consultation.ts
+data/future-self.ts
+data/roadmap.ts
+data/goals.ts
+```
+
+Rules:
+
+- No Supabase queries inside components
+- No Supabase queries inside hooks
+- No Supabase queries inside pages
+- No Supabase queries inside AI modules
+- Server Actions call data functions
+- API Routes call data functions
+
+Flow:
+
+```text
+Component
+    ↓
+Server Action
+    ↓
+data/profile.ts
+    ↓
+Supabase
+```
+
+---
+
+# TanStack Query
+
+Use React Query for:
+
+- Server state
+- Cached database reads
+- Revalidation
+- Loading states
+
+Rules:
+
+- Query keys must be centralized
+- Mutations should invalidate affected queries
+- React Query handles server state
+- Zustand handles client state
+
+---
+
+# Zustand
+
+Use Zustand only for:
+
+- UI state
+- Wizard state
+- Temporary session state
+- Modal state
+- Sidebar state
+
+Do not store:
+
+- Database records
+- AI outputs
+- Persistent user data
+
+Those belong in Supabase.
 
 ---
 
@@ -194,9 +299,9 @@ roadmap.ts
 
 ### Rules
 
-* One component per file
-* No barrel exports outside ui folder
-* Named exports only
+- One component per file
+- No barrel exports outside ui folder
+- Named exports only
 
 ---
 
@@ -224,10 +329,10 @@ export function ComponentName({}: Props) {
 
 Rules:
 
-* No default exports
-* Props type directly above component
-* No inline styles
-* Tailwind only
+- No default exports
+- Props type directly above component
+- No inline styles
+- Tailwind only
 
 ---
 
@@ -261,10 +366,10 @@ export async function POST(req: NextRequest) {
 
 Rules:
 
-* Every route uses try/catch
-* Validate request body
-* Log errors
-* Return success wrapper
+- Every route uses try/catch
+- Validate request body
+- Log errors
+- Return success wrapper
 
 Always:
 
@@ -303,10 +408,39 @@ export async function actionName() {
 
 Rules:
 
-* Always use try/catch
-* Never throw
-* Always return success wrapper
-* Revalidate affected routes after mutations
+- Always use try/catch
+- Never throw
+- Always return success wrapper
+- Revalidate affected routes after mutations
+
+---
+
+# AI Architecture Rules
+
+All AI functionality must exist inside:
+
+```text
+ai/
+```
+
+Examples:
+
+```text
+ai/consultation
+ai/identity
+ai/vision
+ai/future-self
+ai/roadmap
+ai/coaching
+```
+
+Rules:
+
+- Components never call Gemini directly
+- Pages never call Gemini directly
+- Database layer never calls Gemini
+- AI modules return structured outputs
+- All AI outputs must be validated before persistence
 
 ---
 
@@ -324,30 +458,30 @@ AI should optimize for long-term outcomes.
 
 The AI must:
 
-* Use user consultation data
-* Generate realistic future selves
-* Avoid fantasy outcomes
-* Consider available time, resources, and constraints
+- Use user consultation data
+- Generate realistic future selves
+- Avoid fantasy outcomes
+- Consider available time, resources, and constraints
 
 ### Roadmap Generation
 
 Roadmaps must:
 
-* Be achievable
-* Be evidence-based
-* Connect directly to Future Self goals
-* Include milestones and checkpoints
+- Be achievable
+- Be evidence-based
+- Connect directly to Future Self goals
+- Include milestones and checkpoints
 
 ### Mentor System
 
-The Mentor represents the user's future self.
+The Mentor represents the user's Future Self.
 
 The Mentor:
 
-* Challenges limiting behavior
-* Identifies avoidance patterns
-* Encourages accountability
-* Explains trade-offs honestly
+- Challenges limiting behavior
+- Identifies avoidance patterns
+- Encourages accountability
+- Explains trade-offs honestly
 
 The Mentor should not simply agree with the user.
 
@@ -358,15 +492,15 @@ The Mentor should not simply agree with the user.
 Every table must include:
 
 ```typescript
-id
-created_at
-updated_at
+id;
+created_at;
+updated_at;
 ```
 
 User-owned tables must include:
 
 ```typescript
-user_id
+user_id;
 ```
 
 ### Query Rules
@@ -374,7 +508,7 @@ user_id
 Always filter by:
 
 ```typescript
-user_id
+user_id;
 ```
 
 Never query user-owned data without ownership checks.
@@ -383,18 +517,30 @@ Never query user-owned data without ownership checks.
 
 # Authentication Rules
 
-### Protected Routes
-
-All application routes require authentication except:
+### Public Routes
 
 ```text
 /
-/login
+/auth/login
+/auth/sign-up
+/auth/forgot-password
+/auth/update-password
+```
+
+### Protected Routes
+
+```text
+/protected
+/protected/consultation
+/protected/future-self
+/protected/roadmap
+/protected/goals
+/protected/projects
+/protected/lock-in
+/protected/profile
 ```
 
 ### First Login
-
-On first login:
 
 Create profile record.
 
@@ -404,6 +550,7 @@ Default values:
 {
   onboarding_completed: false,
   future_self_created: false,
+  active_lock_in: false,
 }
 ```
 
@@ -412,13 +559,13 @@ Default values:
 If onboarding not complete:
 
 ```text
-/consultation
+/protected/consultation
 ```
 
 Otherwise:
 
 ```text
-/dashboard
+/protected
 ```
 
 ---
@@ -427,9 +574,9 @@ Otherwise:
 
 Rules:
 
-* Never use empty catch blocks
-* Never expose raw errors to users
-* Log errors with context prefix
+- Never use empty catch blocks
+- Never expose raw errors to users
+- Log errors with context prefix
 
 Example:
 
@@ -450,10 +597,10 @@ Please try again.
 
 Never hardcode:
 
-* API Keys
-* Secrets
-* URLs
-* IDs
+- API Keys
+- Secrets
+- URLs
+- IDs
 
 Everything must come from:
 
@@ -485,14 +632,14 @@ Never use deeply nested relative imports.
 
 Allowed:
 
-* Why a decision exists
-* Non-obvious architectural choices
+- Why a decision exists
+- Non-obvious architectural choices
 
 Not allowed:
 
-* Explaining obvious code
-* TODO comments
-* Commenting every line
+- Explaining obvious code
+- TODO comments
+- Commenting every line
 
 Code should explain itself.
 
@@ -510,3 +657,45 @@ Before adding a package ask:
 Approved dependencies must be documented in architecture.md before installation.
 
 No package should be added without a clear justification.
+
+---
+
+# Context Files
+
+The context directory is the project's source of truth.
+
+Before implementing any feature the AI must review:
+
+- project-overview.md
+- architecture.md
+- build-plan.md
+- database-schema.md
+- code-standards.md
+- ui-rules.md
+- ui-tokens.md
+- ui-registry.md
+- library-docs.md
+- project-tracker.md
+
+If code conflicts with context files:
+
+```text
+Context files win.
+```
+
+---
+
+# Future Self Principle
+
+The Future Self is the primary intelligence layer of Zenix.
+
+Every feature must support one of:
+
+- Identity Discovery
+- Future Self Creation
+- Roadmap Generation
+- Execution
+- Accountability
+- Reflection
+
+Features that do not support this flow should not be implemented.
