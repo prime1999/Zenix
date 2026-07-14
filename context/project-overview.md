@@ -1,636 +1,522 @@
 # Project Overview
 
-## About the Project
+## Product Vision
 
-Zent is an AI-powered Personal Engineering OS designed to help people become the future version of themselves they aspire to be.
+Zenix is an AI-powered Personal Growth Operating System designed to help people bridge the gap between who they are today and who they want to become.
 
-Unlike productivity apps that focus on tasks, habits, or motivation, Zent focuses on personal transformation.
+Unlike traditional productivity tools that focus on tasks, habits, or motivation, Zenix focuses on transformation.
 
-Every user begins with a deep consultation process where the AI learns:
+The platform helps users:
 
-* Who the user is today
-* What they want to become
-* Why they want it
-* What they have already tried
-* What has worked and failed
-* Their constraints, responsibilities, and resources
-* Their current skills and knowledge
+- Understand themselves deeply
+- Define a realistic future vision
+- Build a personalized roadmap
+- Execute consistently
+- Adapt intelligently over time
 
-Using this information, Zent creates a Future Self Blueprint — a realistic and achievable representation of the person the user can become.
+Every user begins with a guided consultation where the system learns:
 
-Before finalizing that future, Zent evaluates whether the chosen path actually leads to the outcomes the user wants. The system identifies blind spots, hidden risks, missed opportunities, and real-world implications of the path.
+- Who they are today
+- What they want from life
+- What they value
+- Their strengths and weaknesses
+- Their skills and interests
+- Their responsibilities and constraints
+- Their goals and ambitions
 
-The AI then generates a personalized roadmap that guides the user from their current state to their desired future.
+Using this information, Zenix creates a Future Self Profile — a realistic representation of the person the user can become if they consistently execute on the right plan.
 
-As the user progresses, reflects, learns, succeeds, and struggles, the roadmap continuously evolves to remain realistic, effective, and aligned with the user's long-term vision.
-
-The AI mentor acts as the user's future self.
-
-Its purpose is not to maximize comfort or motivation.
-
-Its purpose is to help the user become the person they committed to becoming.
+The system then generates a personalized roadmap and acts as an AI Chief of Staff that helps the user stay aligned with their future.
 
 ---
 
-## The Problem It Solves
+# The Core Problem
 
-Most people know they want a better future but struggle with:
+Most people struggle with:
 
-* Knowing what path to follow
-* Understanding the real-world implications of their goals
-* Turning ambitions into actionable plans
-* Staying consistent over long periods
-* Measuring meaningful progress
-* Identifying what is actually holding them back
-* Connecting learning to real-world opportunities
-* Understanding how their chosen path creates value and financial stability
+- Lack of clarity
+- Lack of direction
+- Poor execution
+- Inconsistent accountability
+- Decision paralysis
+- Goal overload
+- Misalignment between ambitions and actions
 
-Most productivity tools manage tasks.
+Current solutions focus on:
 
-Most educational platforms teach skills.
+- Tasks
+- Notes
+- Calendars
+- Productivity
 
-Most AI assistants answer questions.
+Very few systems help users answer:
 
-Zent helps users design and build the future they actually want.
+> Who am I becoming?
 
----
-
-## Core Philosophy
-
-### Future Self First
-
-The user's future self is the center of the system.
-
-Everything exists to move the user toward that future.
+Zenix exists to solve that problem.
 
 ---
 
-### Truth Over Comfort
+# Core Philosophy
 
-The AI prioritizes truth, growth, accountability, and long-term outcomes over temporary comfort.
+## Future Self First
 
-The AI does not exist to agree with the user.
+The Future Self is the center of the platform.
 
-The AI exists to help the user achieve meaningful transformation.
-
----
-
-### Understanding Before Planning
-
-Before creating a roadmap, Zent seeks to understand:
-
-* The user's motivations
-* Their circumstances
-* Their challenges
-* Their desired outcomes
-
-The system plans based on reality, not assumptions.
+Every recommendation, roadmap, review, and coaching interaction is evaluated against the user's desired future.
 
 ---
 
-### Future Validation
+## Reality Before Planning
 
-Not every goal automatically leads to the life a user wants.
+The system must understand reality before generating plans.
 
-The AI analyzes:
+Recommendations must consider:
 
-* Career opportunities
-* Financial opportunities
-* Lifestyle implications
-* Risks and trade-offs
-* Real-world applications
+- Available time
+- Existing skills
+- Financial situation
+- Responsibilities
+- Environment
+- Opportunities
 
-The system helps users understand what their chosen future actually looks like before committing to it.
-
----
-
-### Progress Through Execution
-
-Learning alone is not enough.
-
-Users must apply knowledge through projects, milestones, and real-world action.
+Plans must be grounded in reality.
 
 ---
 
-### Roadmaps Are Living Systems
+## Growth Over Comfort
 
-Roadmaps evolve based on:
+The AI should prioritize:
 
-* Performance
-* Reflection data
-* Available time
-* Skill growth
-* Real-world outcomes
-* New opportunities
+- Truth
+- Growth
+- Accountability
+- Long-term outcomes
 
-The objective remains consistent.
-
-The strategy evolves.
+The AI should not simply agree with the user.
 
 ---
 
-## Pages
+## Execution Over Motivation
 
-```text
-/                     → Landing page
-/login                → Authentication
+Motivation is temporary.
 
-/onboarding           → Consultation experience
+Execution creates results.
 
-/dashboard            → Personal command center
+The system focuses on:
 
-/future-self          → Future Self Blueprint
-
-/roadmap              → Personalized roadmap
-/roadmap/[id]         → Roadmap details
-
-/goals                → Goals overview
-
-/projects             → Projects overview
-/projects/[id]        → Project details
-
-/skills               → Skill development
-
-/opportunities        → Future opportunity analysis
-
-/mentor               → AI mentor chat
-
-/reflections          → Reflection history
-
-/lock-in              → Active Lock-In phase
-
-/profile              → User profile and settings
-```
+- Actions
+- Milestones
+- Projects
+- Reviews
+- Accountability
 
 ---
 
-## Navigation
+## Continuous Adaptation
 
-Primary Navigation
+Life changes.
 
-```text
-Dashboard
-Roadmap
-Projects
-Skills
-Mentor
-Profile
-```
+Roadmaps should evolve.
 
-Future Self, Opportunity Analysis, and Lock-In are accessible through the Dashboard and Roadmap experiences.
+The destination remains stable.
 
-The application uses a persistent sidebar navigation.
-The sidebar reinforces the user's transformation journey and serves as the primary navigation system throughout the platform.
+The path can change.
 
 ---
 
-## Core User Flow
+# Core User Journey
 
-### Landing Page
+## Step 1 — Consultation
 
-* Hero section
-* Product philosophy
-* How Zent works
-* Who Zent is for
-* Features
-* Call to action
-
-Logged-in users:
-
-* Redirect to dashboard
-
-Logged-out users:
-
-* Redirect to login
-
----
-
-### Consultation Phase
-
-After account creation, the user enters a structured consultation with the AI.
+The user completes a guided consultation.
 
 The consultation explores:
 
-### Current State
+### Identity
 
-* Current skills
-* Education
-* Career status
-* Lifestyle
-* Resources
-* Existing commitments
+- Values
+- Interests
+- Personality
+- Motivations
 
-### Desired Future
+### Current Situation
 
-* Career goals
-* Personal goals
-* Financial goals
-* Lifestyle aspirations
-* Legacy and impact goals
+- Education
+- Career
+- Skills
+- Resources
+- Responsibilities
 
-### Previous Attempts
+### Future Aspirations
 
-* What has been tried before
-* What succeeded
-* What failed
-* Common obstacles
-* Patterns of inconsistency
+- Career goals
+- Financial goals
+- Lifestyle goals
+- Personal ambitions
 
 ### Constraints
 
-* Available time
-* Financial situation
-* Responsibilities
-* Environment
+- Time
+- Money
+- Environment
+- Existing commitments
 
-The objective is to fully understand the user before designing a transformation plan.
+Output:
 
----
-
-### Future Self Creation
-
-The AI creates a Future Self Blueprint.
-
-The blueprint contains:
-
-* Future identity
-* Skills
-* Knowledge
-* Lifestyle
-* Habits
-* Professional achievements
-* Financial position
-* Personal characteristics
-
-This becomes the user's long-term destination.
+```text
+Identity Blueprint
+```
 
 ---
 
-### Future Validation & Opportunity Analysis
+## Step 2 — Vision Creation
 
-Before finalizing the future self, the AI evaluates:
+Using consultation data, the system helps users define:
 
-* Feasibility
-* Career outcomes
-* Financial outcomes
-* Real-world opportunities
-* Risks
-* Blind spots
-* Alternative paths
+- 1-Year Vision
+- 3-Year Vision
+- 5-Year Vision
+- Long-Term Vision
 
-Example:
+Output:
 
-A student wanting a First Class degree will also learn:
-
-* How that degree creates opportunities
-* How to convert knowledge into value
-* Industry opportunities
-* Income opportunities
-* Entrepreneurship opportunities
-* Practical applications of the field
-
-The AI ensures users understand not just how to achieve a future but what that future actually creates.
+```text
+Vision Blueprint
+```
 
 ---
 
-### Roadmap Generation
+## Step 3 — Future Self Generation
 
-The roadmap is built using:
+The system generates:
+
+- Future Self Persona
+- Future Self Narrative
+- Future Self Communication Style
+- Future Self Advice Framework
+
+Output:
+
+```text
+Future Self Profile
+```
+
+---
+
+## Step 4 — Roadmap Creation
+
+The roadmap is generated using:
 
 ```text
 Current Self
-↓
-Future Self
-↓
-Gap Analysis
-↓
+        ↓
+Identity Blueprint
+        ↓
+Vision Blueprint
+        ↓
+Future Self Profile
+        ↓
 Roadmap
 ```
 
-Roadmaps include:
+Output:
 
-* Phases
-* Milestones
-* Skills
-* Projects
-* Reflection checkpoints
+```text
+Execution Roadmap
+```
 
-Roadmaps are personalized and continuously updated.
+The roadmap includes:
 
----
-
-### Goal System
-
-Goals exist inside the roadmap.
-
-Goals contain:
-
-* Milestones
-* Success criteria
-* Progress indicators
-
-Goals support the roadmap.
-
-The roadmap supports the future self.
+- Milestones
+- Goals
+- Projects
+- Habits
+- Skill Development Paths
 
 ---
 
-### Project System
+## Step 5 — Execution
 
-Projects are execution vehicles.
+Users begin execution through:
 
-Projects can be linked to:
+- Goals
+- Projects
+- Progress Tracking
+- Reviews
 
-* Goals
-* Skills
-* Roadmap phases
-
-Projects contain:
-
-* Milestones
-* Tasks
-* Deliverables
-* Progress tracking
+The roadmap becomes the primary operating system for growth.
 
 ---
 
-### Skill Development
-
-Users can:
-
-* Track skills
-* Measure proficiency
-* Identify skill gaps
-* Connect skills to roadmap phases
-
-The AI recommends skills based on Future Self requirements.
-
----
-
-### Reflection System
-
-Users complete:
-
-* Daily reflections
-* Weekly reviews
-* Monthly reviews
-
-Reflection data helps the AI:
-
-* Detect bottlenecks
-* Identify avoidance patterns
-* Improve recommendations
-* Update the roadmap
-
----
-
-### AI Mentor
-
-The AI mentor is the user's future self.
-
-Responsibilities:
-
-* Strategic guidance
-* Accountability
-* Opportunity awareness
-* Roadmap adjustments
-* Reflection analysis
-* Project guidance
-* Skill recommendations
-
-The mentor challenges decisions that move the user away from the future they committed to building.
-
-The mentor prioritizes long-term outcomes over temporary emotions.
-
----
-
-### Lock-In Phase
+## Step 6 — Lock-In
 
 Lock-In is a focused execution period.
 
-Duration:
+Typical durations:
 
-* 30 Days
-* 60 Days
-* 90 Days
+- 30 Days
+- 60 Days
+- 90 Days
 
 During Lock-In:
 
-* One primary objective is prioritized
-* Accountability increases
-* Progress is monitored closely
-* Distractions are minimized
-* Daily execution becomes the focus
+- Priorities are reduced
+- Focus increases
+- Accountability becomes stricter
+- Reviews become more frequent
 
-Lock-In exists to create significant progress toward major milestones.
-
----
-
-### Dashboard
-
-The dashboard serves as the user's command center.
-
-Sections:
-
-* Future Self Snapshot
-* Current Roadmap Progress
-* Active Goals
-* Active Projects
-* Skill Growth
-* Opportunity Insights
-* Mentor Guidance
-* Recent Activity
-* Lock-In Progress
+The goal is execution, not exploration.
 
 ---
 
-## Data Architecture
+# Core Systems
 
-### User Identity
+## Consultation System
+
+Responsible for:
+
+- User interviews
+- Context gathering
+- Information collection
+- Understanding the user's reality
+
+Output:
 
 ```text
-users
-profiles
+Consultation Data
 ```
-
-Stores:
-
-* User information
-* Preferences
-* Consultation status
 
 ---
 
-### Consultation System
+## Identity System
+
+Responsible for extracting:
+
+- Values
+- Interests
+- Strengths
+- Weaknesses
+- Motivations
+- Skills
+- Priorities
+
+Output:
 
 ```text
-consultations
-consultation_messages
-consultation_insights
+Identity Blueprint
 ```
-
-Stores onboarding conversations and extracted insights.
 
 ---
 
-### Future Self System
+## Vision System
+
+Responsible for generating:
+
+- 1-Year Vision
+- 3-Year Vision
+- 5-Year Vision
+- Long-Term Vision
+
+Output:
 
 ```text
-future_self_profiles
-future_self_traits
-future_self_opportunities
-future_self_risks
+Vision Blueprint
 ```
-
-Stores Future Self Blueprints and opportunity analysis.
 
 ---
 
-### Roadmap System
+## Future Self System
+
+Responsible for creating:
+
+- Future Identity
+- Future Narrative
+- Future Communication Style
+- Future Advice Framework
+
+Output:
 
 ```text
-roadmaps
-roadmap_phases
-roadmap_milestones
+Future Self Profile
 ```
-
-Stores transformation plans.
 
 ---
 
-### Goals
+## Roadmap System
+
+Responsible for creating:
+
+- Milestones
+- Goals
+- Projects
+- Habits
+- Skill Paths
+
+Output:
 
 ```text
-goals
-goal_milestones
+Execution Roadmap
 ```
-
-Stores measurable outcomes.
 
 ---
 
-### Projects
+## Coaching System
+
+The AI acts as:
+
+- Future Self
+- Mentor
+- Accountability Partner
+- Strategic Advisor
+
+Responsibilities:
+
+- Guidance
+- Accountability
+- Reviews
+- Decision Support
+- Progress Analysis
+
+Output:
 
 ```text
-projects
-project_milestones
-project_tasks
+Coaching Responses
 ```
-
-Tracks execution.
 
 ---
 
-### Skills
+# Application Pages
+
+## Authentication
 
 ```text
-skills
-user_skills
+/auth/login
+/auth/sign-up
+/auth/forgot-password
+/auth/update-password
 ```
-
-Tracks capability growth.
 
 ---
 
-### Reflections
+## Protected Pages
 
 ```text
-reflections
-reflection_reviews
+/protected
 ```
 
-Stores self-assessments and lessons.
-
----
-
-### Mentor Memory
+Dashboard
 
 ```text
-mentor_conversations
-mentor_memories
+/protected/consultation
 ```
 
-Stores long-term mentor context.
-
----
-
-### Lock-In System
+Consultation Experience
 
 ```text
-lock_ins
-lock_in_progress
+/protected/future-self
 ```
 
-Tracks focused commitment periods.
+Future Self Profile
+
+```text
+/protected/roadmap
+```
+
+Roadmap Dashboard
+
+```text
+/protected/goals
+```
+
+Goals Management
+
+```text
+/protected/projects
+```
+
+Projects Management
+
+```text
+/protected/lock-in
+```
+
+Lock-In Experience
+
+```text
+/protected/profile
+```
+
+Profile & Settings
 
 ---
 
-## Features In Scope (MVP)
+# MVP Scope
 
-* Authentication
-* AI consultation onboarding
-* Future Self Blueprint generation
-* Opportunity analysis
-* Personalized roadmap generation
-* Goal management
-* Project management
-* Skill tracking
-* AI mentor chat
-* Reflection system
-* Lock-In mode
-* Progress dashboard
-* Roadmap evolution system
+## Included
 
----
-
-## Features Out of Scope (MVP)
-
-* Community features
-* Team collaboration
-* Mobile apps
-* Institutional plans
-* Social networking
-* Payments and subscriptions
-* Multi-language support
+- Authentication
+- User Profile
+- Consultation System
+- Identity Blueprint Generation
+- Vision Builder
+- Future Self Generation
+- Future Self Profile
+- Roadmap Generation
+- Goals
+- Projects
+- Lock-In
+- Coaching System
+- Dashboard
+- Progress Tracking
 
 ---
 
-## Target User
+## Excluded
 
-A person who is serious about growth, achievement, and long-term transformation.
+- Mobile Apps
+- Community Features
+- Team Collaboration
+- Marketplace
+- Institutional Plans
+- Payments
+- Subscription Management
 
-Examples:
-
-* Students
-* Developers
-* Founders
-* Professionals
-* Career switchers
-* Self-directed learners
-
-Zent is not designed for people looking for motivation alone.
-
-Zent is designed for people committed to becoming who they say they want to become.
+These can be introduced in later phases.
 
 ---
 
-## Success Criteria
+# Target Users
 
-* Users complete consultation in under 15 minutes
-* Future Self Blueprints feel accurate and realistic
-* Opportunity analysis provides meaningful insights
-* Roadmaps feel actionable and achievable
-* AI guidance remains useful over long periods
-* Reflection data improves roadmap quality
-* Projects contribute directly to growth
-* Lock-In phases produce measurable outcomes
-* Users gain clarity about what to do next
-* Users make measurable progress toward their Future Self
+Primary users include:
+
+- Students
+- Developers
+- Founders
+- Professionals
+- Career Switchers
+- Self-Learners
+
+The platform is designed for people committed to meaningful growth and long-term transformation.
 
 ---
 
-## Guiding Principle
+# Success Metrics
+
+The platform succeeds when users:
+
+- Complete onboarding
+- Create a Future Self
+- Generate a roadmap
+- Stay engaged with execution
+- Complete milestones
+- Finish Lock-In cycles
+- Achieve measurable progress toward their future goals
+
+---
+
+# Guiding Question
 
 Every feature should answer:
 
-"Does this help the user become the future version of themselves they committed to building?"
+> Does this help the user become the future version of themselves they committed to building?
