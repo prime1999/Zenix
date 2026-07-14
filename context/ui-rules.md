@@ -1,376 +1,287 @@
 # UI Rules
 
-Concise rules for building Zent UI.
+Implementation rules for all user interfaces in Zenix.
 
-These rules exist to keep the experience consistent across the entire product while allowing the visual identity to evolve.
+This file defines how UI is built.
 
-Zent is not a productivity app.
+Visual values such as colors, spacing, typography scales, shadows, radii, and animations live in:
 
-Zent is a Future Self Operating System.
+```text
+ui-tokens.md
+```
 
-Every screen should reinforce clarity, action, accountability, and progress.
+Reusable components live in:
+
+```text
+ui-registry.md
+```
+
+The AI must follow this file whenever building UI.
 
 ---
 
-# Typography
+# Core Principles
 
-Typography configuration is handled globally by the application.
+Every screen should reinforce:
 
-The AI should never:
+- Clarity
+- Progress
+- Accountability
+- Focus
+- Execution
 
-* Import fonts
-* Configure fonts
-* Modify font loading
-* Change root typography settings
-* Add font-related dependencies
+Avoid interfaces that feel:
 
-Font configuration lives in:
+- Noisy
+- Decorative
+- Distracting
 
-```text
-app/layout.tsx
-globals.css
-```
+Zenix is a Personal Growth Operating System.
 
-The AI should assume typography has already been configured.
-
-When building UI:
-
-* Use semantic typography classes and tokens
-* Follow the typography hierarchy defined in this file
-* Never introduce a new font without explicit instruction
-
-Typography decisions are owned by the project, not individual features.
+Not a social app.
+Not a productivity toy.
 
 ---
 
 # Design System Ownership
 
-The project's visual identity is owned by the project owner.
+The visual identity is owned by the project.
 
-The AI must treat the design system as an existing dependency, not something to redesign.
+The AI must not modify:
 
-The AI must not modify or redefine:
+- Color palette
+- Typography system
+- Spacing scale
+- Border radius scale
+- Animation system
+- Theme structure
+- Icon system
 
-* Fonts
-* Color palette
-* Theme tokens
-* Brand identity
-* Global spacing system
-* Animation system
-* Shadows
-* Border radius scale
-* Icon system
-* Existing component styling patterns
+Consume the design system.
 
-These decisions are maintained by the project owner and may evolve independently of feature development.
-
-Unless explicitly instructed, the AI should:
-
-* Use existing design tokens
-* Use existing UI components
-* Follow established styling patterns
-* Respect current theme configuration
-
-The AI should not:
-
-* Introduce new design systems
-* Replace existing colors
-* Add new typography systems
-* Add new animation frameworks
-* Modify global theme files
-* Change branding decisions
-
-Feature implementation should consume the design system, not redefine it.
+Do not redefine it.
 
 ---
 
-# Layout
+# Layout Rules
 
-* Page max-width: 1440px
-* Center content horizontally
-* Main content padding: 32px
-* Section gap: 24px
-* Header height: 64px
-* Responsive on mobile, tablet, and desktop
+## Content Width
 
-Use breathing room generously.
+Use layout tokens.
 
-Zent should feel calm and focused, never crowded.
+Never hardcode widths.
 
 ---
 
-# Navigation
+## Spacing
 
-Primary navigation:
+Use spacing tokens only.
+
+Never invent spacing values.
+
+---
+
+## Responsive Design
+
+Every page must support:
+
+- Mobile
+- Tablet
+- Desktop
+
+Design mobile-first.
+
+---
+
+# Component Rules
+
+## Reuse First
+
+Before creating a component:
+
+1. Check ui-registry.md
+2. Reuse existing patterns
+3. Extend existing components when appropriate
+
+Do not create duplicate UI patterns.
+
+---
+
+## shadcn/ui
+
+Use shadcn/ui whenever a matching primitive exists.
+
+Examples:
+
+- Button
+- Card
+- Input
+- Select
+- Dialog
+- Dropdown Menu
+- Tabs
+- Sheet
+- Tooltip
+
+Avoid introducing UI libraries.
+
+---
+
+## Component Composition
+
+Prefer composition over large monolithic components.
+
+Bad:
 
 ```text
-Dashboard
-Future Self
-Roadmap
-Lock-In
-Reviews
-Profile
+DashboardPage.tsx
+  1000+ lines
 ```
 
-Navigation should remain simple and predictable.
-
-Avoid deep nesting.
-
-Users should always know:
-
-* where they are
-* what they are working on
-* what comes next
-
----
-
-# Cards
-
-Most content should live inside cards.
-
-```css
-background: var(--color-card);
-border: 1px solid var(--color-border);
-border-radius: 16px;
-padding: 24px;
-```
-
-Cards should separate information without overwhelming the user.
-
-Avoid decorative card designs.
-
----
-
-# Typography Hierarchy
-
-## Page Heading
-
-```css
-font-size: 32px;
-font-weight: 700;
-```
-
-Used for:
-
-* Dashboard title
-* Roadmap title
-* Lock-In title
-
----
-
-## Section Heading
-
-```css
-font-size: 18px;
-font-weight: 600;
-```
-
-Used for:
-
-* Card titles
-* Dashboard sections
-* Review sections
-
----
-
-## Body Text
-
-```css
-font-size: 14px;
-font-weight: 400;
-```
-
----
-
-## Secondary Text
-
-```css
-font-size: 12px;
-font-weight: 400;
-```
-
-Used for:
-
-* timestamps
-* labels
-* helper text
-* metadata
-
----
-
-# Buttons
-
-## Primary Button
-
-Used for important actions:
-
-* Continue
-* Start Consultation
-* Generate Future Self
-* Begin Lock-In
-* Save Roadmap
-
-```css
-background: var(--color-primary);
-color: var(--color-primary-foreground);
-border-radius: 8px;
-```
-
----
-
-## Secondary Button
-
-Used for lower-priority actions.
-
-```css
-background: transparent;
-border: 1px solid var(--color-border);
-```
-
----
-
-# Inputs
-
-```css
-background: var(--color-background);
-border: 1px solid var(--color-border);
-border-radius: 8px;
-```
-
-Inputs should prioritize readability.
-
-Never hide important information behind animations.
-
----
-
-# Status Colors
-
-All status colors must use semantic tokens.
-
-```css
---color-success
---color-success-foreground
-
---color-warning
---color-warning-foreground
-
---color-error
---color-error-foreground
-
---color-info
---color-info-foreground
-
---color-pending
---color-pending-foreground
-
---color-complete
---color-complete-foreground
-```
-
----
-
-## Success
-
-Used for:
-
-* Completed milestones
-* Finished roadmap phases
-* Successful reviews
-* Completed Lock-In periods
-
----
-
-## Warning
-
-Used for:
-
-* Falling behind schedule
-* Missed milestones
-* Reduced consistency
-
----
-
-## Error
-
-Used for:
-
-* Failed actions
-* Invalid operations
-* Critical blockers
-
----
-
-## Info
-
-Used for:
-
-* Insights
-* Recommendations
-* Educational content
-* AI observations
-
----
-
-## Pending
-
-Used for:
-
-* Waiting for user action
-* Incomplete steps
-* Upcoming milestones
-
----
-
-## Complete
-
-Used for:
-
-* Achieved outcomes
-* Finished goals
-* Major accomplishments
-
----
-
-# Progress States
-
-Every roadmap item must have one of these states:
+Good:
 
 ```text
-not_started
-in_progress
-blocked
-completed
-abandoned
-```
-
-Never invent new progress states without updating this file.
-
----
-
-# Progress Indicators
-
-Progress indicators are used for:
-
-* Roadmap completion
-* Lock-In completion
-* Goal completion
-* Consultation completion
-* Weekly consistency
-
-Color meaning:
-
-```text
-Success → Completed
-Info → Active Progress
-Warning → Behind Target
-Error → Critical Drift
+DashboardHeader.tsx
+DashboardMetrics.tsx
+DashboardGoals.tsx
+DashboardActivity.tsx
 ```
 
 ---
 
-# Future Self Messages
+# Typography Rules
 
-Future Self responses may be categorized as:
+Typography values come from ui-tokens.md.
+
+Use semantic hierarchy:
+
+- Page Title
+- Section Title
+- Card Title
+- Body Text
+- Secondary Text
+
+Never hardcode font sizes.
+
+---
+
+# Card Rules
+
+Cards are the primary content container.
+
+Cards should:
+
+- Group related information
+- Be visually quiet
+- Prioritize readability
+
+Avoid decorative styling.
+
+---
+
+# Button Rules
+
+Every action must have a clear hierarchy.
+
+Priority:
+
+1. Primary
+2. Secondary
+3. Ghost
+4. Destructive
+
+Never create custom button variants unless documented.
+
+---
+
+# Form Rules
+
+Use:
+
+- React Hook Form
+- Zod validation
+
+Every form must have:
+
+- Labels
+- Validation
+- Error states
+- Loading states
+- Success states
+
+Never rely on placeholders as labels.
+
+---
+
+# Loading States
+
+Every async UI must include one of:
+
+- Skeleton
+- Spinner
+- Progress state
+
+Never leave users wondering if something is happening.
+
+---
+
+# Empty States
+
+Every empty page requires:
+
+- Explanation
+- Context
+- Next action
+
+Examples:
+
+- Create your first roadmap
+- Complete consultation
+- Start Lock-In
+
+---
+
+# Error States
+
+Every error state must:
+
+- Explain the issue
+- Suggest next action
+- Avoid technical language
+
+Never expose raw errors.
+
+---
+
+# Dashboard Rules
+
+Dashboards should answer:
+
+1. Where am I?
+2. What matters now?
+3. What should I do next?
+
+Everything else is secondary.
+
+---
+
+# Progress Visualization
+
+Progress should be visible for:
+
+- Consultation
+- Goals
+- Projects
+- Roadmaps
+- Lock-In
+
+Use approved progress components only.
+
+---
+
+# Future Self UI
+
+Future Self messages must be categorized:
 
 ```text
 Insight
@@ -381,152 +292,104 @@ Reflection
 Recommendation
 ```
 
-Each type should have:
+Each type must use:
 
-* Unique icon
-* Unique visual treatment
-* Consistent styling
+- Consistent icon
+- Consistent styling
+- Consistent spacing
 
----
-
-# Severity Levels
-
-Used for accountability systems.
-
-```text
-low
-medium
-high
-critical
-```
-
-Examples:
-
-Low
-
-* missed one task
-
-Medium
-
-* missed several tasks
-
-High
-
-* roadmap significantly off track
-
-Critical
-
-* current actions directly conflict with stated goals
+Document patterns in ui-registry.md.
 
 ---
 
-# Lock-In Mode
+# Lock-In UI
 
-Lock-In Mode is a focused execution state.
+Lock-In screens should:
 
-When active:
-
-* Reduce distractions
-* Prioritize today's actions
-* Highlight deadlines
-* Surface accountability messages
-* Emphasize progress and consistency
+- Reduce distractions
+- Increase focus
+- Surface priorities
+- Emphasize execution
 
 The UI should communicate:
 
 ```text
-I have work to do.
+Focus on the mission.
 ```
-
-Not:
-
-```text
-I am browsing an app.
-```
-
-Lock-In screens should feel more focused than normal application screens.
 
 ---
 
-# Empty States
+# Accessibility
 
-Every page that can be empty must have an empty state.
+Every UI must include:
 
-Include:
+- Keyboard navigation
+- Proper labels
+- Visible focus states
+- Sufficient contrast
 
-* concise explanation
-* optional illustration or icon
-* clear next action
-
-Examples:
-
-* Start Consultation
-* Create First Roadmap
-* Begin Lock-In
-* Complete First Review
+Accessibility is required.
 
 ---
 
-# AI Philosophy in UI
+# Animations
 
-The interface should reinforce Zent's philosophy.
+Animations should:
 
-The AI is not:
+- Guide attention
+- Improve clarity
 
-* a cheerleader
-* a passive assistant
-* a motivational quote generator
+Animations should not:
 
-The AI is:
+- Distract
+- Delay interaction
 
-* a strategist
-* a mentor
-* a future self
-* a reality checker
-
-UI copy should prioritize:
-
-* honesty
-* clarity
-* accountability
-* progress
-
-Over:
-
-* hype
-* empty motivation
-* exaggerated promises
+Prefer subtle motion.
 
 ---
 
-# Tailwind
+# Tailwind Rules
 
-This project uses Tailwind v4.
-
-Tokens live in:
+Use:
 
 ```text
-globals.css
+Tailwind v4
 ```
 
-Never define colors in:
+Use semantic tokens only.
+
+Never use:
 
 ```text
-tailwind.config.ts
+text-blue-500
+bg-red-500
+border-gray-200
 ```
 
-Use semantic tokens instead of hardcoded colors.
+Always use design tokens.
+
+---
+
+# Documentation Rules
+
+When a reusable component is created:
+
+1. Add it to ui-registry.md
+2. Document variants
+3. Document dependencies
+
+UI work is not complete until the registry is updated.
 
 ---
 
 # Do Nots
 
-* Never use hardcoded brand colors in components
-* Never use Tailwind default colors directly
-* Never use gradient card backgrounds
-* Never expose raw error messages
-* Never use decorative UI that distracts from execution
-* Never create new status types without updating this file
-* Never create new progress states without updating this file
-* Never prioritize aesthetics over clarity
-* Never make accountability messages easy to ignore
+- Do not hardcode colors
+- Do not hardcode typography values
+- Do not create duplicate components
+- Do not introduce new UI libraries
+- Do not expose raw errors
+- Do not prioritize aesthetics over clarity
+- Do not create undocumented component variants
+- Do not bypass ui-registry.md
+- Do not bypass ui-tokens.md
