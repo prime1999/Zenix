@@ -1,109 +1,357 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Zenix
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+AI-powered Personal Growth Operating System.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+Zenix helps users bridge the gap between who they are today and who they want to become.
 
-## Features
+Unlike traditional productivity tools that focus on tasks, habits, and motivation, Zenix focuses on transformation.
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+Users begin with a guided consultation that helps the system understand:
 
-## Demo
+- Who they are
+- What they want
+- Their strengths and weaknesses
+- Their goals and ambitions
+- Their constraints and responsibilities
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+Using this information, Zenix creates:
 
-## Deploy to Vercel
+- Identity Blueprint
+- Vision Blueprint
+- Future Self Profile
+- Personalized Roadmap
+- Execution System
 
-Vercel deployment will guide you through creating a Supabase account and project.
+The platform then acts as an AI Chief of Staff that helps users stay aligned with their future through accountability, guidance, reviews, and focused execution.
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+# Core Philosophy
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+## Future Self First
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+Everything in Zenix revolves around the user's Future Self.
 
-## Clone and run locally
+Every roadmap, recommendation, and coaching interaction exists to help the user become the future version of themselves they committed to building.
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+---
 
-2. Create a Next.js app using the Supabase Starter template npx command
+## Reality Before Planning
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+Plans should be grounded in reality.
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+Recommendations must consider:
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+- Time
+- Skills
+- Resources
+- Responsibilities
+- Constraints
+- Opportunities
 
-3. Use `cd` to change into the app's directory
+---
 
-   ```bash
-   cd with-supabase-app
-   ```
+## Growth Over Comfort
 
-4. Rename `.env.example` to `.env.local` and update the following:
+The AI prioritizes:
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+- Truth
+- Growth
+- Accountability
+- Long-term outcomes
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+The AI is not designed to simply agree with the user.
 
-5. You can now run the Next.js local development server:
+---
 
-   ```bash
-   npm run dev
-   ```
+## Execution Over Motivation
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+Motivation is temporary.
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+Execution creates results.
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+Zenix focuses on:
 
-## Feedback and issues
+- Milestones
+- Goals
+- Projects
+- Reviews
+- Accountability
+- Consistent action
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+---
 
-## More Supabase examples
+# Core User Journey
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+```text
+Consultation
+        ↓
+Identity Blueprint
+        ↓
+Vision Blueprint
+        ↓
+Future Self Profile
+        ↓
+Roadmap Generation
+        ↓
+Execution
+        ↓
+Lock-In
+        ↓
+Continuous Growth
+```
+
+---
+
+# Features
+
+## Consultation System
+
+Guided onboarding experience that gathers context about:
+
+- Identity
+- Goals
+- Motivations
+- Skills
+- Resources
+- Constraints
+
+Output:
+
+```text
+Identity Blueprint
+```
+
+---
+
+## Vision Builder
+
+Helps users define:
+
+- 1-Year Vision
+- 3-Year Vision
+- 5-Year Vision
+- Long-Term Vision
+
+Output:
+
+```text
+Vision Blueprint
+```
+
+---
+
+## Future Self Engine
+
+Generates:
+
+- Future Identity
+- Future Narrative
+- Future Communication Style
+- Future Advice Framework
+
+Output:
+
+```text
+Future Self Profile
+```
+
+---
+
+## Roadmap Engine
+
+Creates personalized:
+
+- Milestones
+- Goals
+- Projects
+- Habits
+- Skill Paths
+
+Output:
+
+```text
+Execution Roadmap
+```
+
+---
+
+## Coaching System
+
+The AI acts as:
+
+- Future Self
+- Mentor
+- Strategist
+- Accountability Partner
+
+Responsibilities:
+
+- Guidance
+- Reviews
+- Accountability
+- Decision Support
+- Progress Analysis
+
+---
+
+## Lock-In System
+
+Focused execution periods designed to maximize progress.
+
+Supported durations:
+
+- 30 Days
+- 60 Days
+- 90 Days
+
+Lock-In helps users:
+
+- Reduce distractions
+- Increase focus
+- Build momentum
+- Execute consistently
+
+---
+
+# Tech Stack
+
+| Layer            | Technology               |
+| ---------------- | ------------------------ |
+| Framework        | Next.js 16               |
+| Language         | TypeScript               |
+| Database         | Supabase PostgreSQL      |
+| Authentication   | Supabase Auth            |
+| Storage          | Supabase Storage         |
+| Realtime         | Supabase Realtime        |
+| AI               | Gemini                   |
+| State Management | TanStack Query + Zustand |
+| Validation       | Zod                      |
+| Styling          | Tailwind CSS v4          |
+| UI Components    | shadcn/ui                |
+| Analytics        | Google Analytics         |
+
+---
+
+# Project Structure
+
+```text
+/
+├── AGENTS.md
+│
+├── context/
+│   ├── project-overview.md
+│   ├── architecture.md
+│   ├── code-standards.md
+│   ├── database-schema.md
+│   ├── library-docs.md
+│   ├── ui-rules.md
+│   ├── ui-tokens.md
+│   ├── ui-registry.md
+│   ├── project-tracker.md
+│   └── build-plan.md
+│
+├── app/
+├── actions/
+├── ai/
+├── components/
+├── data/
+├── hooks/
+├── lib/
+├── types/
+└── middleware.ts
+```
+
+---
+
+# Development Principles
+
+- Components are UI only
+- Database access lives in `data/`
+- Mutations live in `actions/`
+- AI logic lives in `ai/`
+- Shared hooks live in `hooks/`
+- Pages contain no business logic
+- Server Components by default
+- TypeScript strict mode
+- Design system driven development
+
+---
+
+# Documentation
+
+Project documentation lives inside:
+
+```text
+context/
+```
+
+These files are the source of truth for the project.
+
+Before implementing any feature, review:
+
+```text
+project-overview.md
+architecture.md
+code-standards.md
+library-docs.md
+ui-rules.md
+ui-tokens.md
+ui-registry.md
+project-tracker.md
+database-schema.md
+```
+
+---
+
+# MVP Scope
+
+Included:
+
+- Authentication
+- User Profile
+- Consultation System
+- Identity Blueprint
+- Vision Builder
+- Future Self Generation
+- Roadmap Generation
+- Goals
+- Projects
+- Coaching System
+- Lock-In
+- Dashboard
+- Progress Tracking
+
+Excluded:
+
+- Mobile Apps
+- Community Features
+- Team Collaboration
+- Marketplace
+- Payments
+- Subscription Management
+
+---
+
+# Target Users
+
+Zenix is designed for:
+
+- Students
+- Developers
+- Founders
+- Professionals
+- Career Switchers
+- Self-Learners
+
+People who are serious about long-term growth and transformation.
+
+---
+
+# Guiding Question
+
+Every feature should answer:
+
+> Does this help the user become the future version of themselves they committed to building?
+
+If the answer is no, it does not belong in Zenix.
