@@ -1,5 +1,9 @@
 # Architecture
 
+## Status
+
+This document describes the Phase 1 foundation architecture. Core folders (`app/`, `components/`, `lib/`, `assets/`) are currently implemented. Advanced layers (`ai/`, `actions/`, `data/`, `hooks/`, `types/`) are planned for Phase 2+ and do not yet exist in the codebase.
+
 ## Stack
 
 | Layer            | Tool                     | Purpose                                                              |

@@ -20,7 +20,7 @@ Every session must read:
 5. context/ui-rules.md
 6. context/ui-tokens.md
 7. context/ui-registry.md
-8. context/project-tracker.md
+8. context/progress-tracker.md
 9. context/database-schema.md
 ```
 
