@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Roboto, Viga } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import Providers from "./ReactQueryProvider.tsx/Provider";
 
 export const metadata: Metadata = {
   title: "Zenix",
@@ -37,14 +38,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${roboto.variable} ${viga.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

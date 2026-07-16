@@ -78,7 +78,7 @@ const LoginForm = ({
               <div className="relative">
                 <input
                   id="password"
-                  type={showPassword ? "password" : "text"}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   placeholder="your password"

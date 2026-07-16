@@ -87,7 +87,7 @@ const SignUpForm = ({
               <div className="relative">
                 <input
                   id="password"
-                  type={showPassword ? "password" : "text"}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   placeholder="your password"
@@ -105,11 +105,11 @@ const SignUpForm = ({
               </div>
               <div className="relative">
                 <input
-                  id="password"
-                  type={showRepeatPassword ? "password" : "text"}
+                  id="repeat-password"
+                  type={showRepeatPassword ? "text" : "password"}
                   required
-                  value={password}
-                  placeholder="your password"
+                  value={repeatPassword}
+                  placeholder="confirm your password"
                   onChange={(e) => setRepeatPassword(e.target.value)}
                   className="text-black p-2 text-sm w-full rounded-md border focus:outline-0"
                 />
