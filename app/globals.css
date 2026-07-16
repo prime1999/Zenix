@@ -3,6 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  --font-viga: var(--font-zenix-viga);
+  --font-sans: var(--font-geist-sans);
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
@@ -22,6 +24,10 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  --color-primary-blue: var(--primary-blue);
+  --color-primary-cyan: var(--primary-cyan);
+  --color-primary-yellow: var(--primary-yellow);
+  --color-dark: var(--dark);
   --color-chart-1: hsl(var(--chart-1));
   --color-chart-2: hsl(var(--chart-2));
   --color-chart-3: hsl(var(--chart-3));
@@ -69,12 +75,12 @@
     --radius: 0.5rem;
     --primary-blue: #1b54ff;
     --primary-yellow: #feb122;
-    --primary-dark: #040811;
+    --dark: #040811;
     --primary-cyan: #83f9ff;
   }
 
   .dark {
-    --background: 0 0% 100%;
+    --background: 0 0% 95%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -100,7 +106,7 @@
     --chart-5: 27 87% 67%;
     --primary-blue: #1b54ff;
     --primary-yellow: #feb122;
-    --primary-dark: #040811;
+    --dark: #040811;
     --primary-cyan: #83f9ff;
   }
 
