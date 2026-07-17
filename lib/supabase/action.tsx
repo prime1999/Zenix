@@ -10,7 +10,7 @@ const supabase = createClient();
 //------------------ Function to handle sign up ------------------//
 export const signUp = async (email: string, password: string) => {
   try {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -24,6 +24,22 @@ export const signUp = async (email: string, password: string) => {
         status: "error",
         message: "Failed to sign up user",
       };
+    }
+    console.log("Sign up successful:", data);
+    // create the user profile
+    if (data.user) {
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: data.user.id,
+        onboarding_completed: false,
+      });
+      if (profileError) {
+        console.log("Error creating user profile:", profileError);
+        return {
+          code: 400,
+          status: "error",
+          message: "Failed to create user profile",
+        };
+      }
     }
     return {
       code: 200,

@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import googleIcon from "@/assets/icons/google.png";
 import { useSignUp } from "@/lib/Queries.tsx/SupabaseQueries";
+import { TypingAnimation } from "./animations/TypingAnimation";
 
 const SignUpForm = ({
   className,
@@ -61,9 +62,10 @@ const SignUpForm = ({
           <CardTitle className="text-center text-4xl tracking-widest font-viga">
             ZENIX
           </CardTitle>
-          <CardDescription className="text-center text-black/70">
+          {/* <CardDescription className="text-center text-muted-foreground">
             Let's get get to know you 🤝
-          </CardDescription>
+          </CardDescription> */}
+          <TypingAnimation />
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignUp}>
@@ -126,7 +128,7 @@ const SignUpForm = ({
 
               <button
                 type="submit"
-                className="w-full cursor-pointer text-sm rounded-full bg-dark text-white p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
+                className="w-full cursor-pointer text-sm rounded-full bg-dark text-primary-foreground p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
                 disabled={signUpMutation.isPending}
               >
                 {signUpMutation.isPending
@@ -136,11 +138,11 @@ const SignUpForm = ({
             </div>
 
             <div className="flex items-center my-4 w-full">
-              <hr className="flex-1 border-t border-black/10" />
-              <span className="px-3 text-xs tracking-wider text-black/40 font-sans">
+              <hr className="flex-1 border-t border-border" />
+              <span className="px-3 text-xs tracking-wider text-muted-foreground font-sans">
                 or continue with
               </span>
-              <hr className="flex-1 border-t border-black/10" />
+              <hr className="flex-1 border-t border-border" />
             </div>
             <button
               type="button"

@@ -55,7 +55,7 @@ const LoginForm = ({
           <CardTitle className="text-center text-4xl tracking-widest font-viga bg-gradient-to-r from-dark to-primary-cyan bg-clip-text text-transparent">
             ZENIX
           </CardTitle>
-          <CardDescription className="text-center text-black/70">
+          <CardDescription className="text-center text-muted-foreground">
             Welcome back 👋
           </CardDescription>
         </CardHeader>
@@ -70,7 +70,7 @@ const LoginForm = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="text-black p-2 text-sm w-full rounded-md border focus:outline-0"
+                  className="text-foreground p-2 text-sm w-full rounded-md border focus:outline-0"
                 />
               </div>
               <div className="relative">
@@ -81,7 +81,7 @@ const LoginForm = ({
                   value={password}
                   placeholder="your password"
                   onChange={(e) => setPassword(e.target.value)}
-                  className="text-black p-2 text-sm w-full rounded-md border focus:outline-0"
+                  className="text-foreground p-2 text-sm w-full rounded-md border focus:outline-0"
                 />
                 <button
                   type="button"
@@ -95,7 +95,7 @@ const LoginForm = ({
 
               <button
                 type="submit"
-                className="w-full cursor-pointer text-sm rounded-full bg-dark text-white p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
+                className="w-full cursor-pointer text-sm rounded-full bg-dark text-primary-foreground p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
                 disabled={signInMutation.isPending}
               >
                 {signInMutation.isPending ? "Logging in..." : "Login"}
@@ -115,11 +115,11 @@ const LoginForm = ({
             </div>
 
             <div className="flex items-center my-4 w-full">
-              <hr className="flex-1 border-t border-black/10" />
-              <span className="px-3 text-xs tracking-wider text-black/40 font-sans">
+              <hr className="flex-1 border-t border-border" />
+              <span className="px-3 text-xs tracking-wider text-muted-foreground font-sans">
                 or continue with
               </span>
-              <hr className="flex-1 border-t border-black/10" />
+              <hr className="flex-1 border-t border-border" />
             </div>
             <button
               type="button"

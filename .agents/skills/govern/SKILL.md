@@ -1,39 +1,15 @@
 ---
 name: govern
 allowed-tools: Bash, Read, Grep, Glob, Write, Agent
-argument-hint: [audit | align | enforce | sync]
-description: "Run /govern to ensure the codebase follows the project's architecture, design system, UI rules, and context files. Audits implementation against context documentation, detects drift, reports violations, updates approved documentation, and can automatically fix safe governance issues."
+argument-hint: [audit | audit-strict | align | enforce | sync]
+description: "Governance system for Zenix. Validates implementation against context files, detects drift, enforces architecture, UI rules, design tokens, and documentation consistency."
 ---
 
-## Output style (plain words, no dashes, no hyphens)
+# What This Skill Does
 
-<!-- OUTPUT-STYLE:START -->
+/govern protects the project from drifting away from its documented architecture, design system, implementation standards, and roadmap.
 
-Write everything this skill produces, files and messages alike, in plain simple language.
-
-Keep technical terms that carry real meaning.
-
-Explain complex ideas in simple words.
-
-Never use a dash or a hyphen as punctuation.
-
-Write read only, not read-only.
-
-Write short sentences.
-
-Use commas and paragraphs instead.
-
-Code, file paths, command flags, route names, and file names may keep hyphens.
-
-Clear beats clever.
-
-<!-- OUTPUT-STYLE:END -->
-
-## What this skill does
-
-`/govern` protects the project from drifting away from its documented rules.
-
-It compares implementation against:
+The following files are the source of truth:
 
 ```text
 context/project-overview.md
@@ -47,128 +23,20 @@ context/ui-registry.md
 context/project-tracker.md
 ```
 
-The goal is simple.
+Implementation must follow documentation.
 
-The codebase should remain aligned with the documented system.
-
-This skill identifies:
-
-- Architecture drift
-- UI rule violations
-- Design token violations
-- Duplicate patterns
-- Missing documentation
-- Missing registry entries
-- Missing context updates
-- Inconsistent implementation
-- Untracked architectural decisions
-
-This skill acts as the governance layer of the project.
-
----
-
-## Pick the mode
-
-This is always the first step.
-
-Before reading any mode instructions.
-
-Look at what follows `/govern`.
-
-### audit
-
-Example:
-
-```text
-/govern audit
-```
-
-Run a complete governance audit.
-
----
-
-### align
-
-Example:
-
-```text
-/govern align
-```
-
-Find and automatically fix safe governance violations.
-
----
-
-### enforce
-
-Example:
-
-```text
-/govern enforce
-```
-
-Find violations and recommend corrections.
-
----
-
-### sync
-
-Example:
-
-```text
-/govern sync
-```
-
-Update approved documentation from implementation.
-
----
-
-### No mode provided
-
-Print exactly this and stop:
-
-```text
-Which governance action do you want to run? Type one:
-
-• audit   compare implementation against all context files
-• align   automatically fix safe governance violations
-• enforce find violations and recommend corrections
-• sync    update registry and tracker documentation
-```
-
-Wait for user input.
-
-Do not continue until a mode is selected.
-
----
-
-## Governance Sources Of Truth
-
-Always treat these files as authoritative:
-
-```text
-context/project-overview.md
-context/architecture.md
-context/build-plan.md
-context/database-schema.md
-context/code-standards.md
-context/ui-rules.md
-context/ui-tokens.md
-```
-
-Implementation must follow them.
-
-Not the other way around.
+Documentation does not follow implementation.
 
 If implementation conflicts with documentation:
 
-Assume implementation is wrong until proven otherwise.
+```text
+Assume implementation is wrong
+until evidence proves otherwise.
+```
 
 ---
 
-## Governance Priority Order
-
-When conflicts exist:
+# Governance Priority Order
 
 ```text
 1. project-overview.md
@@ -182,46 +50,247 @@ When conflicts exist:
 9. project-tracker.md
 ```
 
-Higher priority files override lower priority files.
+Higher priority documents override lower priority documents.
+
+---
+
+# Evidence Rule
+
+Every finding MUST contain:
+
+```text
+File
+Line
+Rule
+Evidence
+Recommended Fix
+```
 
 Example:
 
-If architecture.md conflicts with project-tracker.md:
+File:
+components/login-form.tsx
+
+Line:
+82
+
+Rule:
+context/ui-tokens.md
+
+Evidence:
+Uses text-red-500.
+
+Rule requires semantic tokens.
+
+Recommended Fix:
+Replace text-red-500 with text-error.
+
+````
+
+No evidence means no finding.
+
+---
+
+# Failure Rule
+
+The audit is invalid if any finding is missing:
 
 ```text
-architecture.md wins
+File
+Line
+Rule
+Evidence
+Recommended Fix
+````
+
+Do not generate summaries.
+
+Do not generate assumptions.
+
+Do not generate recommendations without evidence.
+
+Continue auditing until evidence exists.
+
+---
+
+# Forbidden Language
+
+Never use:
+
+```text
+appears
+likely
+might be
+possibly
+expected
+needs review
+probably
+seems
+potentially
 ```
 
-Tracker must be updated.
+Use only:
 
-Never the reverse.
+```text
+PASS
+FAIL
+UNKNOWN
+```
 
----
-
-# Mode: audit
-
-## Purpose
-
-Perform a complete governance review.
-
-Read only mode.
-
-No files are modified.
+UNKNOWN means evidence could not be found.
 
 ---
 
-## Checks
+# Pick Mode
 
-### Architecture
+## audit
+
+```text
+/govern audit
+```
+
+Read only governance audit.
+
+No files modified.
+
+---
+
+## audit-strict
+
+```text
+/govern audit-strict
+```
+
+Evidence based audit.
+
+No assumptions.
+
+No summaries.
+
+No inferred violations.
+
+Every finding requires evidence.
+
+---
+
+## enforce
+
+```text
+/govern enforce
+```
+
+Find violations.
+
+Provide fixes.
+
+Do not modify files.
+
+---
+
+## align
+
+```text
+/govern align
+```
+
+Fix safe governance violations.
+
+Requires approval before changes.
+
+---
+
+## sync
+
+```text
+/govern sync
+```
+
+Synchronize approved documentation.
+
+Only approved files may be updated.
+
+---
+
+## No Mode
+
+Print:
+
+Which governance action do you want to run?
+
+audit
+audit-strict
+enforce
+align
+sync
+
+Then stop.
+
+Wait for input.
+
+---
+
+# Audit Execution
+
+Step 1
+
+Load:
+
+```text
+context/project-overview.md
+context/architecture.md
+context/build-plan.md
+context/database-schema.md
+context/code-standards.md
+context/ui-rules.md
+context/ui-tokens.md
+context/ui-registry.md
+context/project-tracker.md
+```
+
+Step 2
+
+Scan implementation:
+
+```text
+app/**
+components/**
+actions/**
+hooks/**
+lib/**
+data/**
+ai/**
+providers/**
+stores/**
+```
+
+Step 3
+
+Compare implementation against governance documents.
+
+Step 4
+
+Generate evidence.
+
+Step 5
+
+Generate report.
+
+---
+
+# Required Checks
+
+## Architecture
 
 Verify:
 
-- Folder structure
-- Route structure
-- Service ownership
-- State ownership
-- Feature ownership
-- Data ownership
+```text
+Folder structure
+Route structure
+Service boundaries
+Feature ownership
+Data ownership
+State ownership
+```
 
 Against:
 
@@ -231,34 +300,18 @@ context/architecture.md
 
 ---
 
-### Project Scope
+## UI Rules
 
 Verify:
-
-- Implemented features
-- Missing features
-- Unexpected features
-
-Against:
 
 ```text
-context/project-overview.md
-context/build-plan.md
+Layout rules
+Form rules
+Accessibility
+Loading states
+Empty states
+Component reuse
 ```
-
----
-
-### UI Rules
-
-Verify:
-
-- Layout rules
-- Accessibility rules
-- Form rules
-- Dashboard rules
-- Loading states
-- Empty states
-- Component reuse
 
 Against:
 
@@ -268,16 +321,16 @@ context/ui-rules.md
 
 ---
 
-### Design Tokens
+## Design Tokens
 
 Verify:
 
-No hardcoded:
-
-- Colors
-- Typography values
-- Radius values
-- Shadow values
+```text
+No raw colors
+No hardcoded typography
+No hardcoded radius values
+No hardcoded shadow values
+```
 
 Against:
 
@@ -285,61 +338,56 @@ Against:
 context/ui-tokens.md
 ```
 
-Examples:
+Flag:
 
-Invalid:
-
-```tsx
-text-blue-500
-bg-red-500
+```text
+text-red-500
+bg-blue-500
 rounded-[12px]
 text-[14px]
 ```
 
-Valid:
-
-```tsx
-text - foreground;
-bg - background;
-border - border;
-```
-
 ---
 
-### Component Registry
+## Component Registry
 
-Verify:
-
-Every reusable component exists in:
+Verify every reusable component exists in:
 
 ```text
 context/ui-registry.md
 ```
 
-Detect:
+For every reusable component:
 
-- Missing entries
-- Duplicate components
-- Undocumented variants
+```text
+Component exists
+Registry entry exists
+```
 
----
+PASS or FAIL.
 
-### State Management
-
-Verify consistency for:
-
-- Zustand
-- React Query
-- Server Actions
-- Supabase
-
-Against architecture documentation.
+No assumptions.
 
 ---
 
-### Documentation Drift
+## State Management
 
-Verify implementation matches:
+Verify:
+
+```text
+React Query
+Zustand
+Supabase
+Server Actions
+```
+
+Against architecture.md.
+
+---
+
+## Documentation Drift
+
+Verify:
 
 ```text
 project-overview.md
@@ -347,23 +395,11 @@ build-plan.md
 project-tracker.md
 ```
 
-Detect:
-
-- Missing features
-- Unexpected features
-- Incomplete implementation
+Match implementation.
 
 ---
 
-## Output
-
-Create:
-
-```text
-docs/governance/audit-report.md
-```
-
-Format:
+# Audit Report Format
 
 ```text
 ## Governance Audit
@@ -376,100 +412,142 @@ FAIL
 
 Architecture
 
+Status
+
+PASS
+FAIL
+UNKNOWN
+
 Findings
+
+File:
+Line:
+Rule:
+Evidence:
+Recommended Fix:
 
 UI Rules
 
+Status
+
+PASS
+FAIL
+UNKNOWN
+
 Findings
+
+File:
+Line:
+Rule:
+Evidence:
+Recommended Fix:
 
 Design Tokens
 
+Status
+
+PASS
+FAIL
+UNKNOWN
+
 Findings
+
+File:
+Line:
+Rule:
+Evidence:
+Recommended Fix:
 
 Component Registry
 
+Status
+
+PASS
+FAIL
+UNKNOWN
+
 Findings
+
+File:
+Line:
+Rule:
+Evidence:
+Recommended Fix:
 
 Documentation
 
+Status
+
+PASS
+FAIL
+UNKNOWN
+
 Findings
 
-Recommended Actions
+File:
+Line:
+Rule:
+Evidence:
+Recommended Fix:
 ```
 
 ---
 
-# Mode: enforce
+# Align Mode
 
-## Purpose
-
-Find governance violations.
-
-Recommend corrections.
-
-Never modify implementation.
-
----
-
-## Output
-
-Create:
+Allowed:
 
 ```text
-docs/governance/enforcement-report.md
+Update ui-registry.md
+Update project-tracker.md
+Remove unused imports
+Normalize imports
+Replace documented token violations
+Register reusable components
+Apply existing UI patterns
 ```
 
-Format:
+Forbidden:
 
 ```text
-## Governance Violations
-
-Severity
-
-LOW
-MEDIUM
-HIGH
-CRITICAL
-
-File
-
-Violation
-
-Required Fix
+Architecture changes
+Database changes
+Route changes
+API changes
+Dependencies
+Authentication flow
+Business logic
 ```
 
+Before modifying files:
+
+Show:
+
+Proposed Changes
+
+1.
+2.
+3.
+
+Apply changes?
+
+yes
+no
+
+Wait for approval.
+
 ---
 
-# Mode: sync
+# Sync Mode
 
-## Purpose
-
-Synchronize approved documentation with implementation.
-
----
-
-## Allowed Updates
+May update:
 
 ```text
 context/ui-registry.md
 context/project-tracker.md
 ```
 
----
-
-## Detect
-
-- New components
-- New routes
-- New pages
-- New services
-- New database entities
-
----
-
-## Forbidden Updates
-
-Never automatically modify:
+May not update:
 
 ```text
 context/project-overview.md
@@ -481,167 +559,13 @@ context/ui-rules.md
 context/ui-tokens.md
 ```
 
-These files require explicit approval.
+These remain source of truth.
 
 ---
 
-## Output
+# Success Criteria
 
-Create:
-
-```text
-docs/governance/sync-report.md
-```
-
-Format:
-
-```text
-## Governance Sync
-
-Added Components
-
-Updated Registry
-
-Updated Tracker
-
-Manual Review Required
-```
-
----
-
-# Mode: align
-
-## Purpose
-
-Automatically fix safe governance violations.
-
----
-
-## Allowed Changes
-
-```text
-Update ui-registry.md
-
-Update project-tracker.md
-
-Register reusable components
-
-Normalize imports
-
-Remove unused imports
-
-Replace hardcoded styling
-when documented semantic tokens exist
-
-Apply documented UI patterns
-
-Normalize naming conventions
-```
-
----
-
-## Forbidden Changes
-
-Never automatically modify:
-
-```text
-Architecture
-
-Database schema
-
-Authentication flow
-
-Route structure
-
-API contracts
-
-Business logic
-
-Dependencies
-
-Package versions
-
-Project overview
-
-Build plan
-```
-
-These require:
-
-```text
-/govern enforce
-```
-
-or
-
-```text
-/architect
-```
-
----
-
-## Approval Gate
-
-Before modifying files:
-
-Show proposed changes.
-
-Example:
-
-```text
-Proposed Changes
-
-1. Replace text-red-500 with text-error
-
-2. Register DashboardCard in ui-registry.md
-
-3. Update project-tracker.md current feature
-
-Apply changes?
-
-yes
-no
-```
-
-Wait for approval.
-
-Do not modify files until approved.
-
----
-
-## Output
-
-Create:
-
-```text
-docs/governance/alignment-report.md
-```
-
-Format:
-
-```text
-## Governance Alignment
-
-Overall Status
-
-Files Checked
-
-Files Updated
-
-Changes Applied
-
-Violations Fixed
-
-Remaining Violations
-
-Manual Decisions Required
-```
-
----
-
-## Success Criteria
-
-A governance run is complete when:
+Governance passes when:
 
 ```text
 Architecture matches documentation
@@ -661,29 +585,18 @@ No hardcoded design values exist
 
 ---
 
-## Portability
+# Workflow
 
-Any Agent Skills client on macOS, Linux, or Windows.
-
-Required tools:
+After every feature:
 
 ```text
-Read
-Glob
-Grep
-Write
-Bash
-Agent
+/develop
+
+/govern audit-strict
+
+/govern align
+
+/govern sync
 ```
 
-Subagents may be used for large audits.
-
-The skill should prefer evidence from implementation.
-
-Documentation remains the source of truth.
-
-When in doubt:
-
-Report the conflict.
-
-Do not invent a decision.
+Feature work is not complete until governance passes.
