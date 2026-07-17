@@ -28,6 +28,7 @@
   --color-primary-cyan: var(--primary-cyan);
   --color-primary-yellow: var(--primary-yellow);
   --color-dark: var(--dark);
+  --color-primary-purple: var(--primary-purple);
   --color-chart-1: hsl(var(--chart-1));
   --color-chart-2: hsl(var(--chart-2));
   --color-chart-3: hsl(var(--chart-3));
@@ -77,6 +78,7 @@
     --primary-yellow: #feb122;
     --dark: #040811;
     --primary-cyan: #83f9ff;
+    --primary-purple: #ff00ff;
   }
 
   .dark {
@@ -108,6 +110,7 @@
     --primary-yellow: #feb122;
     --dark: #040811;
     --primary-cyan: #83f9ff;
+    --primary-purple: #ff00ff;
   }
 
   * {

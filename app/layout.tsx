@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Roboto, Viga } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+// React-query imports
 import Providers from "./ReactQueryProvider.tsx/Provider";
+// Shadcn imports
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Zenix",
@@ -46,6 +49,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </Providers>
       </body>

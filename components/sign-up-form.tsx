@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { EyeOff, Eye } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,55 +13,52 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import googleIcon from "@/assets/icons/google.png";
+import { useSignUp } from "@/lib/Queries.tsx/SupabaseQueries";
 
 const SignUpForm = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const signUpMutation = useSignUp();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
+      toast.error("Passwords do not match", { position: "top-center" });
       return;
     }
 
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+    signUpMutation.mutate(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          console.log("Sign up successful:", data);
+          toast.success(data?.message, { position: "top-center" });
+          router.push("/auth/sign-up-success");
         },
-      });
-      if (error) throw error;
-      router.push("/auth/sign-up-success");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
+        onError: (error) => {
+          console.log("Error signing up:", error);
+          toast.error(error.message, { position: "top-center" });
+        },
+      },
+    );
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center text-4xl tracking-widest font-viga bg-gradient-to-r from-dark to-primary-cyan bg-clip-text text-transparent">
+          <CardTitle className="text-center text-4xl tracking-widest font-viga">
             ZENIX
           </CardTitle>
           <CardDescription className="text-center text-black/70">
@@ -74,25 +69,25 @@ const SignUpForm = ({
           <form onSubmit={handleSignUp}>
             <div className="flex flex-col gap-3">
               <div>
-                <input
+                <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="text-black p-2 text-sm w-full rounded-md border focus:outline-0"
+                  className="p-2 text-sm w-full rounded-md border focus:outline-0"
                 />
               </div>
               <div className="relative">
-                <input
+                <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   placeholder="your password"
                   onChange={(e) => setPassword(e.target.value)}
-                  className="text-black p-2 text-sm w-full rounded-md border focus:outline-0"
+                  className="p-2 text-sm w-full rounded-md border focus:outline-0"
                 />
                 <button
                   type="button"
@@ -104,14 +99,14 @@ const SignUpForm = ({
                 </button>
               </div>
               <div className="relative">
-                <input
+                <Input
                   id="repeat-password"
                   type={showRepeatPassword ? "text" : "password"}
                   required
                   value={repeatPassword}
                   placeholder="confirm your password"
                   onChange={(e) => setRepeatPassword(e.target.value)}
-                  className="text-black p-2 text-sm w-full rounded-md border focus:outline-0"
+                  className="p-2 text-sm w-full rounded-md border focus:outline-0"
                 />
                 <button
                   type="button"
@@ -128,13 +123,15 @@ const SignUpForm = ({
                   )}
                 </button>
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+
               <button
                 type="submit"
-                className="w-full cursor-pointer rounded-full bg-dark text-white p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
-                disabled={isLoading}
+                className="w-full cursor-pointer text-sm rounded-full bg-dark text-white p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
+                disabled={signUpMutation.isPending}
               >
-                {isLoading ? "Creating an account..." : "Sign up"}
+                {signUpMutation.isPending
+                  ? "Creating an account..."
+                  : "Sign up"}
               </button>
             </div>
 
@@ -147,7 +144,8 @@ const SignUpForm = ({
             </div>
             <button
               type="button"
-              className="flex items-center gap-4 justify-center w-full rounded-lg bg-white/60 border p-2 font-sans font-semibold cursor-pointer hover:bg-white/20"
+              disabled={signUpMutation.isPending}
+              className="flex items-center gap-2 justify-center w-full text-sm rounded-lg border p-2 font-sans font-semibold cursor-pointer duration-500 hover:bg-white/20"
             >
               <Image
                 src={googleIcon}

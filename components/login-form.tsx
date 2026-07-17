@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { EyeOff, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,7 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import googleIcon from "@/assets/icons/google.png";
+import { useSignIn } from "@/lib/Queries.tsx/SupabaseQueries";
+import { toast } from "sonner";
 
 const LoginForm = ({
   className,
@@ -25,28 +26,26 @@ const LoginForm = ({
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const signInMutation = useSignIn();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
-    }
+    signInMutation.mutate(
+      { email, password },
+      {
+        onSuccess: (data) => {
+          console.log("Sign in successful:", data);
+          toast.success(data?.message, { position: "top-center" });
+          // Update this route to redirect to an authenticated route. The user already has an active session.
+          router.push("/protected");
+        },
+        onError: (error) => {
+          console.log("Error signing in:", error);
+          toast.error(error.message, { position: "top-center" });
+        },
+      },
+    );
   };
 
   return (
@@ -58,14 +57,13 @@ const LoginForm = ({
           </CardTitle>
           <CardDescription className="text-center text-black/70">
             Welcome back 👋
-            {/* Let's get get to know you 🤝 */}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-4">
               <div>
-                <input
+                <Input
                   id="email"
                   type="email"
                   placeholder="m@example.com"
@@ -76,7 +74,7 @@ const LoginForm = ({
                 />
               </div>
               <div className="relative">
-                <input
+                <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
@@ -94,13 +92,13 @@ const LoginForm = ({
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+
               <button
                 type="submit"
-                className="w-full cursor-pointer rounded-full bg-dark text-white p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
-                disabled={isLoading}
+                className="w-full cursor-pointer text-sm rounded-full bg-dark text-white p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
+                disabled={signInMutation.isPending}
               >
-                {isLoading ? "Logging in..." : "Login"}
+                {signInMutation.isPending ? "Logging in..." : "Login"}
               </button>
             </div>
             <div className="flex items-center justify-between mt-2">
@@ -125,7 +123,8 @@ const LoginForm = ({
             </div>
             <button
               type="button"
-              className="flex items-center gap-4 justify-center w-full bg-white rounded-full p-2 font-sans font-semibold cursor-pointer hover:bg-white/90"
+              disabled={signInMutation.isPending}
+              className="flex items-center gap-2 justify-center w-full text-sm rounded-lg border p-2 font-sans font-semibold cursor-pointer duration-500 hover:bg-white/20"
             >
               <Image
                 src={googleIcon}
