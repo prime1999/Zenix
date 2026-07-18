@@ -86,7 +86,7 @@ export function ForgotPasswordForm({
                     className="p-2 text-sm w-full rounded-md border focus:outline-0"
                   />
                 </div>
-                {error && <p className="text-sm text-destructive">{error}</p>}
+                {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Sending..." : "Send reset email"}
                 </Button>

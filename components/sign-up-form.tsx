@@ -16,8 +16,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import googleIcon from "@/assets/icons/google.png";
-import { useSignUp } from "@/lib/Queries.tsx/SupabaseQueries";
+import {
+  useSignUp,
+  useSignInWithGoogle,
+} from "@/lib/Queries.tsx/SupabaseQueries";
 import { TypingAnimation } from "./animations/TypingAnimation";
+import Spinner from "./Loaders/Spinner";
+import Logo from "./reusables/Logo";
 
 const SignUpForm = ({
   className,
@@ -30,6 +35,7 @@ const SignUpForm = ({
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const signUpMutation = useSignUp();
+  const signInWithGoogleMutation = useSignInWithGoogle();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +51,7 @@ const SignUpForm = ({
         onSuccess: (data) => {
           console.log("Sign up successful:", data);
           toast.success(data?.message, { position: "top-center" });
-          router.push("/auth/sign-up-success");
+          router.push("/onboarding");
         },
         onError: (error) => {
           console.log("Error signing up:", error);
@@ -55,16 +61,16 @@ const SignUpForm = ({
     );
   };
 
+  // sign up with google auth
+  const useGoogleAuth = () => {
+    signInWithGoogleMutation.mutate(undefined);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center text-4xl tracking-widest font-viga">
-            ZENIX
-          </CardTitle>
-          {/* <CardDescription className="text-center text-muted-foreground">
-            Let's get get to know you 🤝
-          </CardDescription> */}
+          <Logo />
           <TypingAnimation />
         </CardHeader>
         <CardContent>
@@ -131,9 +137,13 @@ const SignUpForm = ({
                 className="w-full cursor-pointer text-sm rounded-full bg-dark text-primary-foreground p-2 font-sans font-semibold hover:bg-dark/90 disabled:cursor-not-allowed disabled:bg-dark/50"
                 disabled={signUpMutation.isPending}
               >
-                {signUpMutation.isPending
-                  ? "Creating an account..."
-                  : "Sign up"}
+                {signUpMutation.isPending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Spinner /> <p>Creating an account...</p>
+                  </span>
+                ) : (
+                  "Sign up"
+                )}
               </button>
             </div>
 
@@ -146,16 +156,29 @@ const SignUpForm = ({
             </div>
             <button
               type="button"
-              disabled={signUpMutation.isPending}
+              disabled={
+                signUpMutation.isPending || signInWithGoogleMutation.isPending
+              }
+              onClick={() => useGoogleAuth()}
               className="flex items-center gap-2 justify-center w-full text-sm rounded-lg border p-2 font-sans font-semibold cursor-pointer duration-500 hover:bg-white/20"
             >
-              <Image
-                src={googleIcon}
-                width={20}
-                height={20}
-                alt="Google Icon"
-              />
-              Google
+              {signInWithGoogleMutation.isPending ? (
+                <span className="flex items-center gap-2 justify-center">
+                  <Spinner />
+                  <p>Connecting...</p>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  {" "}
+                  <Image
+                    src={googleIcon}
+                    width={20}
+                    height={20}
+                    alt="Google Icon"
+                  />
+                  Google
+                </span>
+              )}
             </button>
             <div className="mt-2 text-center text-xs">
               Already have an account?{" "}

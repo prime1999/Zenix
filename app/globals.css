@@ -5,6 +5,7 @@
 @theme inline {
   --font-viga: var(--font-zenix-viga);
   --font-sans: var(--font-geist-sans);
+  --font-nevera: var(--font-nevera);
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
@@ -120,5 +121,28 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-zenix-roboto), sans-serif;
+  }
+
+  .loader {
+    --color-1: #fff;
+    --size: 0.4px;
+
+    width: calc(48 * var(--size));
+    height: calc(48 * var(--size));
+    border: calc(5 * var(--size)) solid var(--color-1);
+    border-bottom-color: var(--primary-yellow);
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }

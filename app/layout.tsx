@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Roboto, Viga } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import localFont from "next/font/local";
 import "./globals.css";
 // React-query imports
 import Providers from "./ReactQueryProvider.tsx/Provider";
@@ -31,6 +32,18 @@ const viga = Viga({
   weight: ["400"],
 });
 
+// Configure custom local font
+const nevera = localFont({
+  src: [
+    {
+      path: "./fonts/Nevera-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-nevera",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${roboto.variable} ${viga.variable} antialiased`}
+        className={`${geistSans.variable} ${roboto.variable} ${viga.variable} ${nevera.variable} antialiased`}
       >
         <Providers>
           <ThemeProvider

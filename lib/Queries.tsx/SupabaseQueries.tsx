@@ -1,13 +1,16 @@
+// ============================================================
+// Supabase Queries
+// ============================================================
 "use client";
 
 // React-query imports
 import { useMutation } from "@tanstack/react-query";
 // Supabase imports
-import { signIn, signUp } from "@/lib/supabase/action";
+import { signIn, signInWithGoogle, signUp } from "@/lib/supabase/action";
 
-////////////////////////////////////////////////////////////////////
-/// function for a user to sign up using email and password
-///////////////////////////////////////////////////////////////////
+// ============================================================
+// Function for a user to sign up using email and password
+// ============================================================
 export const useSignUp = () => {
   return useMutation({
     mutationFn: async (signUpInfo: any) => {
@@ -24,19 +27,35 @@ export const useSignUp = () => {
   });
 };
 
-////////////////////////////////////////////////////////////////////
-/// function for a user to log in using email and password
-///////////////////////////////////////////////////////////////////
+// ============================================================
+// Function for a user to log in using email and password
+// ============================================================
 export const useSignIn = () => {
   return useMutation({
     mutationFn: async (signInInfo: any) => {
       try {
-        console.log("signInInfo: ", signInInfo);
         const { email, password } = signInInfo;
         const res = await signIn(email, password);
         return res;
       } catch (error) {
         console.log("Error signing in:", error);
+        return null;
+      }
+    },
+  });
+};
+
+// ===============================================================
+// Function for a user to sign up or sign in with Google OAuth
+// ===============================================================
+export const useSignInWithGoogle = () => {
+  return useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await signInWithGoogle();
+        return res;
+      } catch (error) {
+        console.log("Error signing in with Google:", error);
         return null;
       }
     },

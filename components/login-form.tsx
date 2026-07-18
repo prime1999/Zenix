@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import googleIcon from "@/assets/icons/google.png";
 import { useSignIn } from "@/lib/Queries.tsx/SupabaseQueries";
 import { toast } from "sonner";
+import Logo from "./reusables/Logo";
 
 const LoginForm = ({
   className,
@@ -38,7 +39,11 @@ const LoginForm = ({
           console.log("Sign in successful:", data);
           toast.success(data?.message, { position: "top-center" });
           // Update this route to redirect to an authenticated route. The user already has an active session.
-          router.push("/protected");
+          if (data && data.data?.onboarding_completed) {
+            router.push("/dashboard");
+          } else {
+            router.push("/onboarding");
+          }
         },
         onError: (error) => {
           console.log("Error signing in:", error);
@@ -52,10 +57,8 @@ const LoginForm = ({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center text-4xl tracking-widest font-viga bg-gradient-to-r from-dark to-primary-cyan bg-clip-text text-transparent">
-            ZENIX
-          </CardTitle>
-          <CardDescription className="text-center text-muted-foreground">
+          <Logo />
+          <CardDescription className="text-center text-foreground">
             Welcome back 👋
           </CardDescription>
         </CardHeader>
