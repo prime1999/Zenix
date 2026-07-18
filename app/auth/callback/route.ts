@@ -15,9 +15,11 @@ export async function GET(request: Request) {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      console.log("user:", user);
       if (!user) {
-        return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+        //TODO: Handle this error better. This should never happen, but if it does, we should log it and redirect to an error page.
+        return NextResponse.redirect(
+          `${origin}/auth/error?error=User not found`,
+        );
       }
 
       const { data: profile } = await supabase
@@ -26,10 +28,8 @@ export async function GET(request: Request) {
         .eq("id", user.id)
         .single();
 
-      console.log("profile:", profile);
-
       // First login → no profile yet
-      if (!profile) {
+      if (profile === null) {
         await supabase.from("profiles").insert({
           id: user.id,
           onboarding_completed: false,

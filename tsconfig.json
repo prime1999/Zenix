@@ -29,7 +29,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "app/protected/onboarding"
+    "app/(protected)/dashboard",
+    "app/(protected)/onboarding"
   ],
   "exclude": ["node_modules"]
 }
