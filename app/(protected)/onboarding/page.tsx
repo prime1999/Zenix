@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getAuthenticatedUser } from "@/lib/supabase/action";
 import Logo from "@/components/reusables/Logo";
 import Chat from "@/components/onboarding/chat";
+import Questions from "@/components/onboarding/Questions";
+import OnboardingFlow from "@/components/onboarding/onboardFlow";
 
 const page = async () => {
   const user = await getAuthenticatedUser();
@@ -32,7 +34,7 @@ const page = async () => {
             you.
           </p>
         </div>
-        <Chat />
+        <OnboardingFlow />
       </div>
     </main>
   );
