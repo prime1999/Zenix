@@ -15,9 +15,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import googleIcon from "@/assets/icons/google.png";
-import { useSignIn } from "@/lib/Queries.tsx/SupabaseQueries";
+import {
+  useSignIn,
+  useSignInWithGoogle,
+} from "@/lib/Queries.tsx/SupabaseQueries";
 import { toast } from "sonner";
 import Logo from "./reusables/Logo";
+import Spinner from "./Loaders/Spinner";
 
 const LoginForm = ({
   className,
@@ -28,6 +32,7 @@ const LoginForm = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const signInMutation = useSignIn();
+  const signInWithGoogleMutation = useSignInWithGoogle();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +56,11 @@ const LoginForm = ({
         },
       },
     );
+  };
+
+  // sign up with google auth
+  const useGoogleAuth = () => {
+    signInWithGoogleMutation.mutate(undefined);
   };
 
   return (
@@ -126,16 +136,29 @@ const LoginForm = ({
             </div>
             <button
               type="button"
-              disabled={signInMutation.isPending}
+              disabled={
+                signInMutation.isPending || signInWithGoogleMutation.isPending
+              }
+              onClick={() => useGoogleAuth()}
               className="flex items-center gap-2 justify-center w-full text-sm rounded-lg border p-2 font-sans font-semibold cursor-pointer duration-500 hover:bg-white/20"
             >
-              <Image
-                src={googleIcon}
-                width={20}
-                height={20}
-                alt="Google Icon"
-              />
-              Google
+              {signInWithGoogleMutation.isPending ? (
+                <span className="flex items-center gap-2 justify-center">
+                  <Spinner />
+                  <p>Connecting...</p>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  {" "}
+                  <Image
+                    src={googleIcon}
+                    width={20}
+                    height={20}
+                    alt="Google Icon"
+                  />
+                  Google
+                </span>
+              )}
             </button>
           </form>
         </CardContent>

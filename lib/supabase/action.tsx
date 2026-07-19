@@ -2,10 +2,10 @@
 // Supabase Client
 // ============================================================
 
-// Import the browser-side Supabase client factory.
 import { createClient } from "@/lib/supabase/client";
+import { createClientOnServer } from "./server";
 
-// Create a reusable Supabase client instance.
+// Create a reusable browser client instance.
 const supabase = createClient();
 
 // ============================================================
@@ -14,11 +14,6 @@ const supabase = createClient();
 
 /**
  * Create a new user account using email and password.
- *
- * Flow:
- * 1. Create auth user in Supabase Auth.
- * 2. Create matching profile record.
- * 3. Mark onboarding as incomplete.
  */
 export const signUp = async (email: string, password: string) => {
   try {
@@ -26,15 +21,13 @@ export const signUp = async (email: string, password: string) => {
       email,
       password,
       options: {
-        // Used only when email verification is enabled.
-        emailRedirectTo: `${window.location.origin}/protected`,
+        // Updated to your new route name (e.g., /dashboard or /onboarding)
+        emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
 
-    // Stop execution if account creation fails.
     if (error) {
       console.log("Error signing up:", error);
-
       return {
         code: 400,
         status: "error",
@@ -45,22 +38,16 @@ export const signUp = async (email: string, password: string) => {
 
     console.log("Sign up successful:", data);
 
-    // Create a profile row linked to the auth user.
     if (data.user) {
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .insert({
-          // Use the auth user id as the profile id.
           id: data.user.id,
-
-          // User has not completed onboarding yet.
           onboarding_completed: false,
         });
 
-      // Prevent users from continuing without a profile.
       if (profileError) {
         console.log("Error creating user profile:", profileError);
-
         return {
           code: 400,
           status: "error",
@@ -77,7 +64,6 @@ export const signUp = async (email: string, password: string) => {
       };
     }
 
-    // Safety fallback if user creation succeeds but user object is missing.
     return {
       code: 400,
       status: "error",
@@ -86,7 +72,6 @@ export const signUp = async (email: string, password: string) => {
     };
   } catch (error) {
     console.log("Error signing up:", error);
-
     return {
       code: 400,
       status: "error",
@@ -98,11 +83,6 @@ export const signUp = async (email: string, password: string) => {
 
 /**
  * Sign in an existing user with email and password.
- *
- * Flow:
- * 1. Authenticate credentials.
- * 2. Fetch profile information.
- * 3. Return onboarding status for routing decisions.
  */
 export const signIn = async (email: string, password: string) => {
   try {
@@ -111,10 +91,8 @@ export const signIn = async (email: string, password: string) => {
       password,
     });
 
-    // Stop execution if authentication fails.
     if (error) {
       console.log("Error signing in:", error);
-
       return {
         code: 400,
         status: "error",
@@ -123,8 +101,6 @@ export const signIn = async (email: string, password: string) => {
       };
     }
 
-    // Fetch only the fields needed to determine
-    // whether the user should go to onboarding or dashboard.
     const { data: profileData, error: profileError } = await supabase
       .from("profiles")
       .select("id, onboarding_completed")
@@ -133,7 +109,6 @@ export const signIn = async (email: string, password: string) => {
 
     if (profileError) {
       console.log("Error fetching user profile:", profileError);
-
       return {
         code: 400,
         status: "error",
@@ -143,7 +118,6 @@ export const signIn = async (email: string, password: string) => {
     }
 
     console.log("Sign in successful:", data);
-
     return {
       code: 200,
       status: "success",
@@ -152,7 +126,6 @@ export const signIn = async (email: string, password: string) => {
     };
   } catch (error) {
     console.log("Error signing in:", error);
-
     return {
       code: 400,
       status: "error",
@@ -164,30 +137,18 @@ export const signIn = async (email: string, password: string) => {
 
 /**
  * Start the Google OAuth authentication flow.
- *
- * Flow:
- * User
- *   → Google
- *   → Supabase
- *   → /auth/callback
- *
- * The authenticated user is not available here.
- * User data becomes available inside the callback route
- * after exchanging the auth code for a session.
  */
 export const signInWithGoogle = async () => {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        // Supabase redirects here after Google authentication.
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
     if (error) {
       console.log("Error using Google:", error);
-
       return {
         code: 400,
         status: "error",
@@ -204,12 +165,30 @@ export const signInWithGoogle = async () => {
     };
   } catch (error) {
     console.log("Error using Google:", error);
-
     return {
       code: 400,
       status: "error",
       message: "Failed to use Google",
       data: null,
     };
+  }
+};
+
+/**
+ * Get authenticated user safely on Server Components or Server Actions.
+ */
+export const getAuthenticatedUser = async () => {
+  try {
+    // 💡 FIX: Create and await the server client inside the function execution
+    const supabaseServer = await createClientOnServer();
+    const { data, error } = await supabaseServer.auth.getUser();
+
+    if (error || !data?.user) {
+      return null;
+    }
+
+    return data.user;
+  } catch (error) {
+    return null;
   }
 };

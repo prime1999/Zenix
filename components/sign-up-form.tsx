@@ -48,12 +48,12 @@ const SignUpForm = ({
     signUpMutation.mutate(
       { email, password },
       {
-        onSuccess: (data) => {
+        onSuccess: (data: any) => {
           console.log("Sign up successful:", data);
           toast.success(data?.message, { position: "top-center" });
           router.push("/onboarding");
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.log("Error signing up:", error);
           toast.error(error.message, { position: "top-center" });
         },

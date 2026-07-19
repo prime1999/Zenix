@@ -6,7 +6,12 @@
 // React-query imports
 import { useMutation } from "@tanstack/react-query";
 // Supabase imports
-import { signIn, signInWithGoogle, signUp } from "@/lib/supabase/action";
+import {
+  getAuthenticatedUser,
+  signIn,
+  signInWithGoogle,
+  signUp,
+} from "@/lib/supabase/action";
 
 // ============================================================
 // Function for a user to sign up using email and password
@@ -61,3 +66,20 @@ export const useSignInWithGoogle = () => {
     },
   });
 };
+
+// ====================================================
+// Function to check authenticated user
+// ====================================================
+// export const useGetAuthenticatedUser = () => {
+//   return useMutation({
+//     mutationFn: async () => {
+//       try {
+//         const res = await getAuthenticatedUser();
+//         return res;
+//       } catch (error) {
+//         console.log("Error checking authenticated user:", error);
+//         return null;
+//       }
+//     },
+//   });
+// };

@@ -79,7 +79,7 @@
     --primary-yellow: #feb122;
     --dark: #040811;
     --primary-cyan: #83f9ff;
-    --primary-purple: #ff00ff;
+    --primary-purple: #bc83f5;
   }
 
   .dark {
@@ -111,7 +111,7 @@
     --primary-yellow: #feb122;
     --dark: #040811;
     --primary-cyan: #83f9ff;
-    --primary-purple: #ff00ff;
+    --primary-purple: #bc83f5;
   }
 
   * {
@@ -121,6 +121,35 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-zenix-roboto), sans-serif;
+  }
+
+  @layer base {
+    /* Target the scrollbar track (the background path) */
+    ::-webkit-scrollbar {
+      width: 8px; /* Vertical scrollbar width */
+      height: 8px; /* Horizontal scrollbar height */
+    }
+
+    /* Target the draggable handle */
+    ::-webkit-scrollbar-thumb {
+      background: #bc83f5;
+      backdrop-filter: blur(4px);
+      border-radius: 9999px;
+      border: 2px solid transparent; /* Acts as padding inside the track */
+      background-clip: padding-box; /* Forces the background to stay inside the border */
+      transition: background 0.2s ease;
+    }
+
+    /* Hover effect on the handle */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #bc83f5;
+      background-clip: padding-box;
+    }
+
+    /* Target the empty track space */
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
   }
 
   .loader {

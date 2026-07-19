@@ -1,3 +1,5 @@
+"use server";
+
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
@@ -6,7 +8,7 @@ import { cookies } from "next/headers";
  * global variable. Always create a new client within each function when using
  * it.
  */
-export async function createClient() {
+export async function createClientOnServer() {
   const cookieStore = await cookies();
 
   return createServerClient(
