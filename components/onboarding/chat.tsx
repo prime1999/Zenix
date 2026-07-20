@@ -2,14 +2,51 @@
 
 import { useState } from "react";
 import { ArrowUp } from "lucide-react";
+
 import { Textarea } from "../ui/textarea";
+
+type UserInsights = {
+  interests: string[];
+  motivations: string[];
+  values: string[];
+  futureVision: string[];
+  obstacles: string[];
+};
 
 type Props = {
   question: string;
-  onNext: (nextQuestion: string, answer: string) => void;
+
+  stage: {
+    id: string;
+    goal: string;
+    maxFollowUps: number;
+  };
+
+  followUpCount: number;
+
+  answers: {
+    stage: string;
+    question: string;
+    answer: string;
+  }[];
+
+  userInsights: UserInsights;
+
+  onNext: (
+    nextQuestion: string,
+    answer: string,
+    insights?: Partial<UserInsights>,
+  ) => void;
 };
 
-const Chat = ({ question, onNext }: Props) => {
+const Chat = ({
+  question,
+  stage,
+  followUpCount,
+  answers,
+  userInsights,
+  onNext,
+}: Props) => {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,17 +61,24 @@ const Chat = ({ question, onNext }: Props) => {
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           question,
           answer,
+          answers,
+          stage,
+          followUpCount,
+          userInsights,
         }),
       });
 
       const data = await res.json();
 
-      onNext(data.nextQuestion, answer);
+      onNext(data.nextQuestion, answer, data.insights);
 
       setAnswer("");
+    } catch (error) {
+      console.error("Onboarding Error:", error);
     } finally {
       setLoading(false);
     }
@@ -50,9 +94,9 @@ const Chat = ({ question, onNext }: Props) => {
       />
 
       <button
-        disabled={loading}
+        disabled={loading || answer.trim() === ""}
         onClick={handleSubmit}
-        className="absolute right-3 bottom-2 bg-primary-purple text-white rounded-full p-2"
+        className="absolute right-3 bottom-2 bg-primary-purple text-white rounded-full p-2 cursor-pointer disabled:opacity-50"
       >
         <ArrowUp size={13} />
       </button>
