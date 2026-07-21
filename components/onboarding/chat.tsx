@@ -5,30 +5,18 @@ import { ArrowUp } from "lucide-react";
 
 import { Textarea } from "../ui/textarea";
 
-type UserInsights = {
-  interests: string[];
-  motivations: string[];
-  values: string[];
-  futureVision: string[];
-  obstacles: string[];
-};
+import { generateNextQuestion } from "@/lib/api/onboarding.action";
+
+import { Answer, Stage, UserInsights } from "@/lib/types";
+
+import { useOnboardingStore } from "@/stores/onboardingStore";
 
 type Props = {
-  question: string;
-
-  stage: {
-    id: string;
-    goal: string;
-    maxFollowUps: number;
-  };
+  stage: Stage;
 
   followUpCount: number;
 
-  answers: {
-    stage: string;
-    question: string;
-    answer: string;
-  }[];
+  answers: Answer[];
 
   userInsights: UserInsights;
 
@@ -40,7 +28,6 @@ type Props = {
 };
 
 const Chat = ({
-  question,
   stage,
   followUpCount,
   answers,
@@ -50,29 +37,27 @@ const Chat = ({
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const question = useOnboardingStore((state) => state.question);
+
   const handleSubmit = async () => {
     if (!answer.trim()) return;
 
     setLoading(true);
 
     try {
-      const res = await fetch("/api/onboarding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          question,
-          answer,
-          answers,
-          stage,
-          followUpCount,
-          userInsights,
-        }),
+      const data = await generateNextQuestion({
+        question,
+        answer,
+        answers,
+        stage,
+        followUpCount,
+        userInsights,
       });
 
-      const data = await res.json();
+      if (!data.nextQuestion) {
+        console.log("Missing nextQuestion", data);
+        return;
+      }
 
       onNext(data.nextQuestion, answer, data.insights);
 

@@ -1,13 +1,12 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedUser } from "@/lib/supabase/action";
 import Logo from "@/components/reusables/Logo";
-import Chat from "@/components/onboarding/chat";
-import Questions from "@/components/onboarding/Questions";
 import OnboardingFlow from "@/components/onboarding/onboardFlow";
+import RealtimeInterface from "@/components/onboarding/RealtimeInterface";
 
 const page = async () => {
   const user = await getAuthenticatedUser();
-  console.log(user);
+
   if (!user) {
     redirect("/auth/login");
   }
@@ -21,10 +20,10 @@ const page = async () => {
           "radial-gradient(circle at 50% 45%, rgba(188, 131, 245, 0.45) 0%, rgba(235, 230, 237, 0) 65%)",
       }}
     >
-      <div>
+      <div className="w-full mx-auto md:8/12 lg:w-1/2">
         {" "}
         <Logo />
-        <div className="flex flex-col gap-1 items-center justify-center mt-2 text-sm font-sans">
+        <div className="flex flex-col gap-1 items-center justify-center text-center mt-2 text-sm font-sans">
           {" "}
           <h6 className="font-semibold">
             Hi there 👋, ready to meet the future you?
@@ -36,6 +35,7 @@ const page = async () => {
         </div>
         <OnboardingFlow />
       </div>
+      <RealtimeInterface />
     </main>
   );
 };

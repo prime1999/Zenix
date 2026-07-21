@@ -8,7 +8,7 @@ export const ONBOARDING_STAGES = [
   {
     id: "interests",
     starterQuestion:
-      "Nice to meet you. Tell me a little about yourself. What do you genuinely enjoy spending your time on?",
+      "Nice to meet you 🤝. Tell me a little about yourself. What do you genuinely enjoy spending your time on?",
     goal: "Understand what naturally interests, excites, and energizes the user.",
     maxFollowUps: 2,
   },
