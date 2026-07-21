@@ -20,7 +20,7 @@ const page = async () => {
           "radial-gradient(circle at 50% 45%, rgba(188, 131, 245, 0.45) 0%, rgba(235, 230, 237, 0) 65%)",
       }}
     >
-      <div className="w-full mx-auto md:8/12 lg:w-1/2">
+      <div className="w-full mx-auto md:8/12 lg:w-5/12">
         {" "}
         <Logo />
         <div className="flex flex-col gap-1 items-center justify-center text-center mt-2 text-sm font-sans">

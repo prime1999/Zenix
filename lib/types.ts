@@ -5,6 +5,7 @@ export type Answer = {
 };
 
 export type UserInsights = {
+  name: string;
   interests: string[];
   motivations: string[];
   values: string[];

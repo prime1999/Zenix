@@ -4,6 +4,8 @@ import { ONBOARDING_STAGES } from "@/lib/ai/onboardingStages";
 import { Answer, OnboardingStore, UserInsights } from "@/lib/types";
 
 const createInitialInsights = (): UserInsights => ({
+  name: "",
+
   interests: [],
   motivations: [],
   values: [],
@@ -78,6 +80,8 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
   addInsights: (newInsights) =>
     set((state) => ({
       userInsights: {
+        name: newInsights.name?.trim() || state.userInsights.name,
+
         interests: mergeArrays(
           state.userInsights.interests,
           newInsights.interests ?? [],

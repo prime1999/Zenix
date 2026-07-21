@@ -2,6 +2,49 @@ import { NextResponse } from "next/server";
 
 import { ai } from "@/lib/ai/gemini";
 import { ONBOARDING_SYSTEM_PROMPT } from "@/lib/ai/onboardingPrompts";
+import { UserInsights } from "@/lib/types";
+
+// Helper function to extract and format display name cleanly
+function extractDisplayName(
+  userInsights?: Record<UserInsights, any>,
+  answers?: Array<{ question: string; answer: string; stage: string }>,
+  latestAnswer?: string,
+): string {
+  // 1. Try to find a name from explicit insights first
+  let rawName = userInsights?.name;
+
+  // 2. If not in insights, search for a name in previous stage answers
+  if (!rawName && Array.isArray(answers)) {
+    const nameAnswer = answers.find(
+      (a) =>
+        a.question.toLowerCase().includes("name") ||
+        a.question.toLowerCase().includes("call you") ||
+        a.question.toLowerCase().includes("who are you"),
+    );
+    if (nameAnswer) {
+      rawName = nameAnswer.answer;
+    }
+  }
+
+  // 3. Fallback to current answer if we are on the name stage right now
+  if (!rawName && latestAnswer) {
+    rawName = latestAnswer;
+  }
+
+  if (!rawName || typeof rawName !== "string") return "there";
+
+  const trimmed = rawName.trim();
+  const parts = trimmed.split(/\s+/);
+
+  // Single word / moniker like "priime" -> capitalize to "Priime"
+  if (parts.length === 1) {
+    return parts[0].charAt(0).toUpperCase() + parts[0].slice(1).toLowerCase();
+  }
+
+  // Full name like "olanaji yusuf" -> pick the first name "Olanaji"
+  const firstName = parts[0];
+  return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+}
 
 export async function POST(req: Request) {
   try {
@@ -9,6 +52,9 @@ export async function POST(req: Request) {
 
     const { question, answer, answers, stage, followUpCount, userInsights } =
       body;
+
+    // Dynamically extract name from stage history or insights
+    const displayName = extractDisplayName(userInsights, answers, answer);
 
     const stageAnswers = answers.filter(
       (item: { stage: string }) => item.stage === stage.id,
@@ -18,6 +64,11 @@ export async function POST(req: Request) {
 
     const prompt = `
 ${ONBOARDING_SYSTEM_PROMPT}
+
+USER IDENTIFICATION
+-------------------
+User's Name: "${displayName}"
+(Note: Address them as "${displayName}" occasionally when it fits naturally. If "${displayName}" is "there", do not force name usage.)
 
 CURRENT STAGE
 -------------
@@ -59,23 +110,15 @@ ${stage.goal}
 
 HOW TO FORMULATE "nextQuestion":
 1. **Reaction + Question:** Start with a brief (1 sentence), natural, slightly witty or grounded reaction to what they just said. Then ask your ONE question.
-2. **Keep the Vibe Right:** Sounds like a peer who is sharp, driven, and easy to talk to over coffee—not an interviewer, coach, or robot.
-3. **Build on Insights:** Use KNOWN USER INSIGHTS so the user feels heard and remembered.
-
-Examples of Good Tone:
-- Known: Wants to build Edtech.
-  User answer: "Existing platforms are way too boring."
-  Good: "Yeah, most of them feel like doing tax forms with a compiler attached. What’s the secret sauce you’re thinking of adding to actually make it fun?"
-
-- Known: Wants to build dev tools.
-  User answer: "I just love getting into the flow state."
-  Good: "Nothing beats that late-night coding high when everything just clicks. What kind of problem gets you locked in like that?"
+2. **Name Usage:** You can address them as "${displayName}" occasionally when it feels natural, but don't force it into every response.
+3. **Keep the Vibe Right:** Sound like a peer who is sharp, driven, and easy to talk to over coffee.
+4. **Build on Insights:** Use KNOWN USER INSIGHTS so the user feels heard and remembered.
 
 RULES
 1. Ask ONLY ONE question total in "nextQuestion".
 2. Keep the entire response under 2–3 short sentences max.
 3. Do not summarize, give unsolicited advice, or explain your reasoning.
-4. Extract NEW insights from the user's latest answer into the JSON.
+4. Extract NEW insights from the user's latest answer into the JSON (including their name if they just introduced themselves).
 
 ${
   isFinalFollowUp
@@ -92,12 +135,12 @@ Return valid JSON ONLY matching this format:
 {
   "nextQuestion": "",
   "insights": {
+    "name": "${displayName !== "there" ? displayName : ""}",
     "interests": [],
     "motivations": [],
     "values": [],
     "futureVision": [],
-    "obstacles": [],
-    "strengths": []
+    "obstacles": []
   }
 }
 `;

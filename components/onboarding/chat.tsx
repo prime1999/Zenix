@@ -38,6 +38,7 @@ const Chat = ({
   const [loading, setLoading] = useState(false);
 
   const question = useOnboardingStore((state) => state.question);
+  const isComplete = useOnboardingStore((state) => state.isComplete);
 
   const handleSubmit = async () => {
     if (!answer.trim()) return;
@@ -75,11 +76,12 @@ const Chat = ({
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
         placeholder="Feel free to express yourself..."
+        disabled={loading || isComplete}
         className="mt-6 h-24"
       />
 
       <button
-        disabled={loading || answer.trim() === ""}
+        disabled={loading || answer.trim() === "" || isComplete}
         onClick={handleSubmit}
         className="absolute right-3 bottom-2 bg-primary-purple text-white rounded-full p-2 cursor-pointer disabled:opacity-50"
       >

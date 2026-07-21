@@ -11,6 +11,8 @@ const RealtimeInterface = () => {
   const glowRef = useRef<HTMLDivElement>(null);
 
   const userInsights = useOnboardingStore((state) => state.userInsights);
+  const answers = useOnboardingStore((state) => state.answers);
+  const isComplete = useOnboardingStore((state) => state.isComplete);
 
   useEffect(() => {
     if (!ringRef.current || !innerRef.current || !glowRef.current) return;
@@ -44,15 +46,26 @@ const RealtimeInterface = () => {
     return () => ctx.revert();
   }, []);
 
+  const hasStarted = answers.length > 0;
+
+  const hasInsights =
+    !!userInsights.name ||
+    userInsights.interests.length > 0 ||
+    userInsights.motivations.length > 0 ||
+    userInsights.values.length > 0 ||
+    userInsights.futureVision.length > 0 ||
+    userInsights.obstacles.length > 0 ||
+    userInsights.strengths.length > 0;
+
   return (
-    <aside className="absolute top-7 right-7 w-[320px] border-2 border-input rounded-md bg-transparent p-5">
-      <div className="flex flex-col">
-        <div className="flex items-start gap-2">
-          {" "}
-          <div className="relative h-6 w-6">
+    <aside className="hidden md:flex flex-col absolute top-5 right-5 w-[360px] max-h-[500px] rounded-2xl border border-input bg-transparent shadow-xs overflow-hidden">
+      {/* Header */}
+      <div className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-xl p-5">
+        <div className="flex items-start gap-3">
+          <div className="relative h-8 w-8 flex-shrink-0">
             <div
               ref={glowRef}
-              className="absolute inset-0 rounded-full bg-primary-purple blur-3xl opacity-40"
+              className="absolute inset-0 rounded-full bg-primary-purple blur-xl opacity-40"
             />
 
             <div
@@ -62,26 +75,55 @@ const RealtimeInterface = () => {
 
             <div
               ref={innerRef}
-              className="absolute inset-3 rounded-full border-2 border-primary-purple/70"
+              className="absolute inset-[6px] rounded-full border border-primary-purple/70"
             />
           </div>
-          <div className="flex flex-col justify-center">
-            <h3 className="text-sm font-medium font-sans">
-              What Zenix is Learning
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              This updates as we talk.
+
+          <div>
+            <h3 className="font-medium text-sm">What Zenix Is Learning</h3>
+
+            <p className="text-xs text-muted-foreground mt-1">
+              Building your future-self profile in real time.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 space-y-4">
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        {userInsights.name && (
+          <div>
+            <p className="text-xs font-sans">
+              Alright {userInsights.name}, let's get started!
+            </p>
+          </div>
+        )}
+
+        {!hasInsights && (
+          <div className="flex h-full items-center justify-center text-center">
+            <div className="max-w-[240px]">
+              <p className="text-sm text-muted-foreground">
+                {hasStarted
+                  ? "Zenix is gathering your profile..."
+                  : "Start answering questions..."}
+              </p>
+
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                {hasStarted
+                  ? "Learning about who you are, what drives you, and who you're becoming."
+                  : "Zenix will begin building your profile here."}
+              </p>
+            </div>
+          </div>
+        )}
+
         <InsightSection title="Interests" items={userInsights.interests} />
 
         <InsightSection title="Motivations" items={userInsights.motivations} />
 
         <InsightSection title="Values" items={userInsights.values} />
+
+        <InsightSection title="Strengths" items={userInsights.strengths} />
 
         <InsightSection
           title="Future Vision"
@@ -90,6 +132,11 @@ const RealtimeInterface = () => {
 
         <InsightSection title="Obstacles" items={userInsights.obstacles} />
       </div>
+      {!isComplete && (
+        <button className="m-4 bg-primary-purple text-white rounded-lg py-2 px-4 text-sm font-medium cursor-pointer duration-500 transition hover:bg-primary-purple/90">
+          Meet your future self
+        </button>
+      )}
     </aside>
   );
 };
@@ -104,7 +151,7 @@ const InsightSection = ({ title, items }: InsightSectionProps) => {
 
   return (
     <div>
-      <h4 className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+      <h4 className="text-xs uppercase tracking-wider font-semibold font-sans">
         {title}
       </h4>
 
@@ -112,7 +159,7 @@ const InsightSection = ({ title, items }: InsightSectionProps) => {
         {items.map((item) => (
           <span
             key={item}
-            className="text-xs rounded-full border border-primary-purple/30 px-2 py-1 bg-primary-purple/5"
+            className="mt-2 rounded-lg border border-input shadow-xs py-1 px-2 text-xs"
           >
             {item}
           </span>
