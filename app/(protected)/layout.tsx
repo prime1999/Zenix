@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import { Suspense } from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
@@ -11,6 +12,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         }
       >
         {children}
+        <Footer />
       </Suspense>
     </main>
   );

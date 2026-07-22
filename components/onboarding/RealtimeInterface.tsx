@@ -132,7 +132,7 @@ const RealtimeInterface = () => {
 
         <InsightSection title="Obstacles" items={userInsights.obstacles} />
       </div>
-      {!isComplete && (
+      {isComplete && (
         <button className="m-4 bg-primary-purple text-white rounded-lg py-2 px-4 text-sm font-medium cursor-pointer duration-500 transition hover:bg-primary-purple/90">
           Meet your future self
         </button>

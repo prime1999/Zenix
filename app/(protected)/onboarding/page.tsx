@@ -7,8 +7,12 @@ import RealtimeInterface from "@/components/onboarding/RealtimeInterface";
 const page = async () => {
   const user = await getAuthenticatedUser();
 
-  if (!user) {
+  if (!user || !user.user) {
     redirect("/auth/login");
+  }
+
+  if (user.profile.is_profile_complete) {
+    redirect("/dashboard");
   }
 
   return (

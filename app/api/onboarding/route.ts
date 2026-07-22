@@ -2,47 +2,44 @@ import { NextResponse } from "next/server";
 
 import { ai } from "@/lib/ai/gemini";
 import { ONBOARDING_SYSTEM_PROMPT } from "@/lib/ai/onboardingPrompts";
-import { UserInsights } from "@/lib/types";
+import { Answer, UserInsights } from "@/lib/types";
 
-// Helper function to extract and format display name cleanly
 function extractDisplayName(
-  userInsights?: Record<UserInsights, any>,
-  answers?: Array<{ question: string; answer: string; stage: string }>,
+  userInsights?: Partial<UserInsights>,
+  answers?: Answer[],
   latestAnswer?: string,
-): string {
-  // 1. Try to find a name from explicit insights first
+) {
+  // First try saved name
   let rawName = userInsights?.name;
 
-  // 2. If not in insights, search for a name in previous stage answers
-  if (!rawName && Array.isArray(answers)) {
-    const nameAnswer = answers.find(
-      (a) =>
-        a.question.toLowerCase().includes("name") ||
-        a.question.toLowerCase().includes("call you") ||
-        a.question.toLowerCase().includes("who are you"),
-    );
-    if (nameAnswer) {
-      rawName = nameAnswer.answer;
+  // Then try identity stage answer
+  if (!rawName && answers?.length) {
+    const identityAnswer = answers.find((a) => a.stage === "identity");
+
+    if (identityAnswer) {
+      rawName = identityAnswer.answer;
     }
   }
 
-  // 3. Fallback to current answer if we are on the name stage right now
+  // Fallback for very first question
   if (!rawName && latestAnswer) {
     rawName = latestAnswer;
   }
 
-  if (!rawName || typeof rawName !== "string") return "there";
-
-  const trimmed = rawName.trim();
-  const parts = trimmed.split(/\s+/);
-
-  // Single word / moniker like "priime" -> capitalize to "Priime"
-  if (parts.length === 1) {
-    return parts[0].charAt(0).toUpperCase() + parts[0].slice(1).toLowerCase();
+  if (!rawName || typeof rawName !== "string") {
+    return null;
   }
 
-  // Full name like "olanaji yusuf" -> pick the first name "Olanaji"
+  const trimmed = rawName.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  const parts = trimmed.split(/\s+/);
+
   const firstName = parts[0];
+
   return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
 }
 
@@ -53,11 +50,10 @@ export async function POST(req: Request) {
     const { question, answer, answers, stage, followUpCount, userInsights } =
       body;
 
-    // Dynamically extract name from stage history or insights
     const displayName = extractDisplayName(userInsights, answers, answer);
 
     const stageAnswers = answers.filter(
-      (item: { stage: string }) => item.stage === stage.id,
+      (item: Answer) => item.stage === stage.id,
     );
 
     const isFinalFollowUp = followUpCount + 1 >= stage.maxFollowUps;
@@ -67,8 +63,7 @@ ${ONBOARDING_SYSTEM_PROMPT}
 
 USER IDENTIFICATION
 -------------------
-User's Name: "${displayName}"
-(Note: Address them as "${displayName}" occasionally when it fits naturally. If "${displayName}" is "there", do not force name usage.)
+${displayName ? `User Name: "${displayName}"` : `User Name: Unknown`}
 
 CURRENT STAGE
 -------------
@@ -97,50 +92,111 @@ KNOWN USER INSIGHTS
 -------------------
 ${JSON.stringify(userInsights, null, 2)}
 
+ALL PREVIOUS ANSWERS
+--------------------
+${JSON.stringify(answers, null, 2)}
+
 ANSWERS FROM THIS STAGE
 -----------------------
 ${JSON.stringify(stageAnswers, null, 2)}
 
 YOUR TASK
 ---------
-You are exploring the "${stage.id}" stage.
 
-Your main goal for this turn:
+You are currently exploring the "${stage.id}" stage.
+
+Your goal is:
 ${stage.goal}
 
-HOW TO FORMULATE "nextQuestion":
-1. **Reaction + Question:** Start with a brief (1 sentence), natural, slightly witty or grounded reaction to what they just said. Then ask your ONE question.
-2. **Name Usage:** You can address them as "${displayName}" occasionally when it feels natural, but don't force it into every response.
-3. **Keep the Vibe Right:** Sound like a peer who is sharp, driven, and easy to talk to over coffee.
-4. **Build on Insights:** Use KNOWN USER INSIGHTS so the user feels heard and remembered.
+IMPORTANT
+
+You are building an evolving understanding of this person.
+
+The user should feel like you remember who they are.
+
+Use:
+
+- KNOWN USER INSIGHTS
+- ALL PREVIOUS ANSWERS
+- CURRENT STAGE
+
+to maintain continuity.
+
+The user should NEVER feel like they are starting over.
+
+Before asking a question, check:
+
+- Has this already been asked?
+- Has this already been answered?
+- Is this already obvious from previous context?
+
+If YES:
+
+DO NOT ask it again.
+
+Move the conversation forward.
+
+CONVERSATION STYLE
+
+1. Start with a brief natural reaction.
+2. Then ask ONE question.
+3. Keep the entire response short.
+4. Sound like someone having coffee with a friend.
+5. Curious, grounded, intelligent.
+6. Not corporate.
+7. Not philosophical.
+8. Not overly deep.
+9. Not a questionnaire.
+
+NAME USAGE
+
+${
+  displayName
+    ? `You may occasionally use "${displayName}" naturally, but do not overuse it.`
+    : `Do not force name usage.`
+}
 
 RULES
-1. Ask ONLY ONE question total in "nextQuestion".
-2. Keep the entire response under 2–3 short sentences max.
-3. Do not summarize, give unsolicited advice, or explain your reasoning.
-4. Extract NEW insights from the user's latest answer into the JSON (including their name if they just introduced themselves).
+
+1. Ask ONLY ONE question.
+2. Never ask multiple questions.
+3. Never ask compound questions.
+4. Build on previous answers.
+5. Stay focused on the current stage.
+6. Do not move to another stage.
+7. Do not summarize.
+8. Do not give advice.
+9. Do not explain your reasoning.
+10. Make the user feel understood.
 
 ${
   isFinalFollowUp
     ? `
 This is the FINAL follow-up for this stage.
-Ask a slightly sharper question that locks in your understanding of this stage before moving on.
+
+Ask a question that completes your understanding of this stage before moving on.
 `
     : `
 Continue exploring this stage naturally.
 `
 }
 
-Return valid JSON ONLY matching this format:
+Also extract NEW insights from the latest answer.
+
+Only include insights that are genuinely new.
+
+Return valid JSON only:
+
 {
   "nextQuestion": "",
   "insights": {
-    "name": "${displayName !== "there" ? displayName : ""}",
+    "name": "${displayName ?? ""}",
     "interests": [],
     "motivations": [],
     "values": [],
     "futureVision": [],
-    "obstacles": []
+    "obstacles": [],
+    "strengths": []
   }
 }
 `;

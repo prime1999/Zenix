@@ -179,16 +179,35 @@ export const signInWithGoogle = async () => {
  */
 export const getAuthenticatedUser = async () => {
   try {
-    // 💡 FIX: Create and await the server client inside the function execution
-    const supabaseServer = await createClientOnServer();
-    const { data, error } = await supabaseServer.auth.getUser();
+    const supabase = await createClientOnServer();
 
-    if (error || !data?.user) {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
       return null;
     }
 
-    return data.user;
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError) {
+      console.error("Profile Error:", profileError);
+      return null;
+    }
+
+    return {
+      user,
+      profile: profile,
+    };
   } catch (error) {
+    console.error("Auth Error:", error);
+
     return null;
   }
 };

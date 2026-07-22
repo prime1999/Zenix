@@ -5,7 +5,6 @@ import { Answer, OnboardingStore, UserInsights } from "@/lib/types";
 
 const createInitialInsights = (): UserInsights => ({
   name: "",
-
   interests: [],
   motivations: [],
   values: [],
