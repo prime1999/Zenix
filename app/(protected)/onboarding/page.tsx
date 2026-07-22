@@ -3,6 +3,7 @@ import { getAuthenticatedUser } from "@/lib/supabase/action";
 import Logo from "@/components/reusables/Logo";
 import OnboardingFlow from "@/components/onboarding/onboardFlow";
 import RealtimeInterface from "@/components/onboarding/RealtimeInterface";
+import MobileView from "@/components/onboarding/MobileView";
 
 const page = async () => {
   const user = await getAuthenticatedUser();
@@ -37,9 +38,12 @@ const page = async () => {
             you.
           </p>
         </div>
+        <MobileView />
         <OnboardingFlow />
       </div>
-      <RealtimeInterface />
+      <div className="absolute top-5 right-5 hidden md:block">
+        <RealtimeInterface />
+      </div>
     </main>
   );
 };

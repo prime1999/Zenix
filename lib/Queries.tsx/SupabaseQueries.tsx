@@ -7,11 +7,13 @@
 import { useMutation } from "@tanstack/react-query";
 // Supabase imports
 import {
+  completeOnboarding,
   getAuthenticatedUser,
   signIn,
   signInWithGoogle,
   signUp,
 } from "@/lib/supabase/action";
+import { Answer, UserInsights } from "../types";
 
 // ============================================================
 // Function for a user to sign up using email and password
@@ -83,3 +85,27 @@ export const useSignInWithGoogle = () => {
 //     },
 //   });
 // };
+
+// =====================================================================
+// Function to finish the onboarding process and update user insights
+// =====================================================================
+
+export const useCompleteOnboarding = () => {
+  return useMutation({
+    mutationFn: async ({
+      userInsights,
+      answers,
+    }: {
+      userInsights: UserInsights;
+      answers: Answer[];
+    }) => {
+      try {
+        await completeOnboarding({ userInsights, answers });
+        return { success: true };
+      } catch (error) {
+        console.error("Error completing onboarding:", error);
+        return { success: false };
+      }
+    },
+  });
+};

@@ -7,6 +7,7 @@ import "./globals.css";
 import Providers from "./ReactQueryProvider.tsx/Provider";
 // Shadcn imports
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "Zenix",
@@ -61,8 +62,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
-            <Toaster />
+            <TooltipProvider>
+              {children}
+              <Toaster />
+            </TooltipProvider>
           </ThemeProvider>
         </Providers>
       </body>

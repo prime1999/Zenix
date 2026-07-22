@@ -7,6 +7,7 @@ import { useOnboardingStore } from "@/stores/onboardingStore";
 
 const Questions = () => {
   const question = useOnboardingStore((state) => state.question);
+  const isComplete = useOnboardingStore((state) => state.isComplete);
 
   const textRef = useRef<HTMLSpanElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
@@ -14,7 +15,9 @@ const Questions = () => {
   useEffect(() => {
     if (!textRef.current) return;
 
-    const chars = question.split("");
+    const chars = (
+      isComplete ? "That is a wrap, check what I got." : question
+    ).split("");
 
     textRef.current.textContent = "";
 
@@ -36,7 +39,7 @@ const Questions = () => {
     return () => {
       tween.kill();
     };
-  }, [question]);
+  }, [question, isComplete]);
 
   useEffect(() => {
     if (!cursorRef.current) return;

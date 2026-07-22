@@ -4,6 +4,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { createClientOnServer } from "./server";
+import { Answer, UserInsights } from "../types";
 
 // Create a reusable browser client instance.
 const supabase = createClient();
@@ -211,3 +212,56 @@ export const getAuthenticatedUser = async () => {
     return null;
   }
 };
+
+// ============================================================
+// Onboarding Services
+// ============================================================
+
+/**
+ * complete the onboarding process
+ */
+type CompleteOnboardingParams = {
+  userInsights: UserInsights;
+  answers: Answer[];
+};
+
+export async function completeOnboarding({
+  userInsights,
+  answers,
+}: CompleteOnboardingParams) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  await supabase.from("onboarding_profiles").insert({
+    user_id: user.id,
+    name: userInsights.name,
+    interests: userInsights.interests,
+    motivations: userInsights.motivations,
+    values: userInsights.values,
+    future_vision: userInsights.futureVision,
+    obstacles: userInsights.obstacles,
+    strengths: userInsights.strengths,
+  });
+
+  await supabase.from("onboarding_answers").insert(
+    answers.map((answer) => ({
+      user_id: user.id,
+      stage: answer.stage,
+      question: answer.question,
+      answer: answer.answer,
+    })),
+  );
+
+  await supabase
+    .from("profiles")
+    .update({
+      onboarding_completed: true,
+      user_name: userInsights.name,
+    })
+    .eq("id", user.id);
+}

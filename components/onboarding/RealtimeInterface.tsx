@@ -1,9 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useCompleteOnboarding } from "@/lib/Queries.tsx/SupabaseQueries";
 
 const RealtimeInterface = () => {
   const ringRef = useRef<HTMLDivElement>(null);
@@ -13,6 +15,7 @@ const RealtimeInterface = () => {
   const userInsights = useOnboardingStore((state) => state.userInsights);
   const answers = useOnboardingStore((state) => state.answers);
   const isComplete = useOnboardingStore((state) => state.isComplete);
+  const router = useRouter();
 
   useEffect(() => {
     if (!ringRef.current || !innerRef.current || !glowRef.current) return;
@@ -57,10 +60,27 @@ const RealtimeInterface = () => {
     userInsights.obstacles.length > 0 ||
     userInsights.strengths.length > 0;
 
+  const completeOnboardingMutation = useCompleteOnboarding();
+
+  // function to complete the onboarding process
+  const completeOnboarding = () => {
+    completeOnboardingMutation.mutate(
+      { userInsights, answers },
+      {
+        onSuccess: (success) => {
+          console.log("Onboarding completed successfully");
+          if (success) {
+            router.push("/dashboard");
+          }
+        },
+      },
+    );
+  };
+
   return (
-    <aside className="hidden md:flex flex-col absolute top-5 right-5 w-[360px] max-h-[500px] rounded-2xl border border-input bg-transparent shadow-xs overflow-hidden">
+    <aside className="flex flex-col w-full md:w-[360px] h-full md:max-h-[500px] rounded-2xl md:border border-input bg-transparent shadow-xs overflow-hidden">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-xl p-5">
+      <div className="sticky top-0 z-10 border-b border-border/50 md:bg-background/80 backdrop-blur-xl p-3 md:p-5">
         <div className="flex items-start gap-3">
           <div className="relative h-8 w-8 flex-shrink-0">
             <div
@@ -80,9 +100,11 @@ const RealtimeInterface = () => {
           </div>
 
           <div>
-            <h3 className="font-medium text-sm">What Zenix Is Learning</h3>
+            <h3 className="font-medium text-lg md:text-sm">
+              What Zenix Is Learning
+            </h3>
 
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs md:text-muted-foreground mt-1">
               Building your future-self profile in real time.
             </p>
           </div>
@@ -102,13 +124,13 @@ const RealtimeInterface = () => {
         {!hasInsights && (
           <div className="flex h-full items-center justify-center text-center">
             <div className="max-w-[240px]">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm md:text-muted-foreground">
                 {hasStarted
                   ? "Zenix is gathering your profile..."
                   : "Start answering questions..."}
               </p>
 
-              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+              <p className="text-xs md:text-muted-foreground mt-2 leading-relaxed">
                 {hasStarted
                   ? "Learning about who you are, what drives you, and who you're becoming."
                   : "Zenix will begin building your profile here."}
@@ -133,7 +155,12 @@ const RealtimeInterface = () => {
         <InsightSection title="Obstacles" items={userInsights.obstacles} />
       </div>
       {isComplete && (
-        <button className="m-4 bg-primary-purple text-white rounded-lg py-2 px-4 text-sm font-medium cursor-pointer duration-500 transition hover:bg-primary-purple/90">
+        <button
+          type="button"
+          disabled={completeOnboardingMutation.isPending}
+          onClick={() => completeOnboarding()}
+          className="m-4 bg-primary-purple text-white rounded-lg py-2 px-4 text-sm font-medium cursor-pointer duration-500 transition hover:bg-primary-purple/90"
+        >
           Meet your future self
         </button>
       )}
