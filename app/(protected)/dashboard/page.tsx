@@ -12,7 +12,7 @@ const page = async () => {
     redirect("/auth/login");
   }
 
-  if (!user.profile.is_profile_complete) {
+  if (!user.profile.onboarding_completed) {
     redirect("/onboarding");
   }
 
