@@ -28,7 +28,7 @@ export const signUp = async (email: string, password: string) => {
     });
 
     if (error) {
-      console.log("Error signing up:", error);
+      //console.log("Error signing up:", error);
       return {
         code: 400,
         status: "error",
@@ -37,7 +37,7 @@ export const signUp = async (email: string, password: string) => {
       };
     }
 
-    console.log("Sign up successful:", data);
+    //console.log("Sign up successful:", data);
 
     if (data.user) {
       const { data: profileData, error: profileError } = await supabase
@@ -48,7 +48,7 @@ export const signUp = async (email: string, password: string) => {
         });
 
       if (profileError) {
-        console.log("Error creating user profile:", profileError);
+        // console.log("Error creating user profile:", profileError);
         return {
           code: 400,
           status: "error",
@@ -72,7 +72,7 @@ export const signUp = async (email: string, password: string) => {
       data: null,
     };
   } catch (error) {
-    console.log("Error signing up:", error);
+    // console.log("Error signing up:", error);
     return {
       code: 400,
       status: "error",
@@ -93,7 +93,7 @@ export const signIn = async (email: string, password: string) => {
     });
 
     if (error) {
-      console.log("Error signing in:", error);
+      //console.log("Error signing in:", error);
       return {
         code: 400,
         status: "error",
@@ -109,7 +109,7 @@ export const signIn = async (email: string, password: string) => {
       .single();
 
     if (profileError) {
-      console.log("Error fetching user profile:", profileError);
+      //console.log("Error fetching user profile:", profileError);
       return {
         code: 400,
         status: "error",
@@ -118,7 +118,7 @@ export const signIn = async (email: string, password: string) => {
       };
     }
 
-    console.log("Sign in successful:", data);
+    //console.log("Sign in successful:", data);
     return {
       code: 200,
       status: "success",
@@ -126,7 +126,7 @@ export const signIn = async (email: string, password: string) => {
       data: profileData,
     };
   } catch (error) {
-    console.log("Error signing in:", error);
+    //console.log("Error signing in:", error);
     return {
       code: 400,
       status: "error",
@@ -149,7 +149,7 @@ export const signInWithGoogle = async () => {
     });
 
     if (error) {
-      console.log("Error using Google:", error);
+      //console.log("Error using Google:", error);
       return {
         code: 400,
         status: "error",
@@ -165,7 +165,7 @@ export const signInWithGoogle = async () => {
       data,
     };
   } catch (error) {
-    console.log("Error using Google:", error);
+    //console.log("Error using Google:", error);
     return {
       code: 400,
       status: "error",
@@ -198,7 +198,7 @@ export const getAuthenticatedUser = async () => {
       .single();
 
     if (profileError) {
-      console.error("Profile Error:", profileError);
+      //console.error("Profile Error:", profileError);
       return null;
     }
 
@@ -207,7 +207,7 @@ export const getAuthenticatedUser = async () => {
       profile: profile,
     };
   } catch (error) {
-    console.error("Auth Error:", error);
+    //console.error("Auth Error:", error);
 
     return null;
   }

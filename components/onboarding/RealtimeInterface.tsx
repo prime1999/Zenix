@@ -69,9 +69,10 @@ const RealtimeInterface = () => {
       {
         onSuccess: (success) => {
           console.log("Onboarding completed successfully");
-          if (success) {
-            router.push("/dashboard");
-          }
+          console.log(success);
+          router.push("/dashboard");
+          // if (success) {
+          // }
         },
       },
     );
