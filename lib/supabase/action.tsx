@@ -24,14 +24,13 @@ export const signUp = async (email: string, password: string) => {
     // BETA TESTER CHECK
     // =====================================
 
-    const { data: tester } = await supabase
+    const { data: tester, error: testerError } = await supabase
       .from("testers")
       .select("email")
       .eq("email", normalizedEmail)
       .maybeSingle();
 
     if (!tester) {
-      console.log("here");
       return {
         code: 403,
         status: "error",
@@ -73,7 +72,6 @@ export const signUp = async (email: string, password: string) => {
 
     const { error: profileError } = await supabase.from("profiles").insert({
       id: data.user.id,
-      email: normalizedEmail,
       onboarding_completed: false,
     });
 
