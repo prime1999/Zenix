@@ -79,7 +79,7 @@ const RealtimeInterface = () => {
   };
 
   return (
-    <aside className="flex flex-col w-full md:w-[360px] h-full md:max-h-[500px] rounded-2xl md:border border-input bg-transparent shadow-xs overflow-hidden">
+    <aside className="flex flex-col w-full md:w-[360px] h-full md:max-h-[500px] rounded-2xl md:border border-input bg-transparent shadow-xs overflow-auto">
       {/* Header */}
       <div className="sticky top-0 z-10 border-b border-border/50 md:bg-background/80 backdrop-blur-xl p-3 md:p-5">
         <div className="flex items-start gap-3">

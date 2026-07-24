@@ -47,7 +47,7 @@ const MobileView = () => {
         onOpenChange={setOpen}
         direction="right"
       >
-        <DrawerContent className="fixed inset-y-0 right-0 z-50 h-full w-[85vw] max-w-sm flex flex-col rounded-l-xl rounded-r-none backdrop-blur-3xl bg-transparent">
+        <DrawerContent className="fixed inset-y-0 right-0 z-50 h-full w-[85vw] max-w-sm flex flex-col rounded-l-xl rounded-r-none backdrop-blur-3xl bg-transparent overflow-auto">
           <div>
             {" "}
             <RealtimeInterface />
