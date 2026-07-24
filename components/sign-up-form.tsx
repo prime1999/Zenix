@@ -49,9 +49,12 @@ const SignUpForm = ({
       { email, password },
       {
         onSuccess: (data: any) => {
-          console.log("Sign up successful:", data);
           toast.success(data?.message, { position: "top-center" });
-          router.push("/onboarding");
+          if (data?.code === 403) {
+            router.push("/auth/error?error=You are not an allowed tester");
+          } else {
+            router.push("/onboarding");
+          }
         },
         onError: (error: any) => {
           console.log("Error signing up:", error);

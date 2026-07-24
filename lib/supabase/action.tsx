@@ -18,17 +18,38 @@ const supabase = createClient();
  */
 export const signUp = async (email: string, password: string) => {
   try {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // =====================================
+    // BETA TESTER CHECK
+    // =====================================
+
+    const { data: tester } = await supabase
+      .from("testers")
+      .select("email")
+      .eq("email", normalizedEmail)
+      .maybeSingle();
+
+    if (!tester) {
+      console.log("here");
+      return {
+        code: 403,
+        status: "error",
+        message: "This email is not part of the current Zenix testing group.",
+        data: null,
+      };
+    }
+
+    // =====================================
+    // CREATE AUTH USER
+    // =====================================
+
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: normalizedEmail,
       password,
-      options: {
-        // Updated to your new route name (e.g., /dashboard or /onboarding)
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-      },
     });
 
     if (error) {
-      //console.log("Error signing up:", error);
       return {
         code: 400,
         status: "error",
@@ -37,46 +58,49 @@ export const signUp = async (email: string, password: string) => {
       };
     }
 
-    //console.log("Sign up successful:", data);
+    if (!data.user) {
+      return {
+        code: 400,
+        status: "error",
+        message: "Failed to create user.",
+        data: null,
+      };
+    }
 
-    if (data.user) {
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: data.user.id,
-          onboarding_completed: false,
-        });
+    // =====================================
+    // CREATE PROFILE
+    // =====================================
 
-      if (profileError) {
-        // console.log("Error creating user profile:", profileError);
-        return {
-          code: 400,
-          status: "error",
-          message: "Failed to create user profile",
-          data: null,
-        };
-      }
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: data.user.id,
+      email: normalizedEmail,
+      onboarding_completed: false,
+    });
+
+    if (profileError) {
+      console.error("Profile Creation Error:", profileError);
 
       return {
-        code: 200,
-        status: "success",
-        message: "User signed up successfully",
-        data: profileData,
+        code: 400,
+        status: "error",
+        message: "Failed to initialize profile.",
+        data: null,
       };
     }
 
     return {
-      code: 400,
-      status: "error",
-      message: "User was created but profile initialization failed",
-      data: null,
+      code: 200,
+      status: "success",
+      message: "Account created successfully.",
+      data,
     };
   } catch (error) {
-    // console.log("Error signing up:", error);
+    console.error("Sign Up Error:", error);
+
     return {
-      code: 400,
+      code: 500,
       status: "error",
-      message: "Failed to sign up user",
+      message: "Failed to create account.",
       data: null,
     };
   }
