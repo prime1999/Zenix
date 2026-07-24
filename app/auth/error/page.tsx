@@ -1,15 +1,8 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import Logo from "@/components/reusables/Logo";
 
-async function ErrorContent({
-  searchParams,
-}: {
-  searchParams: Promise<{ error: string }>;
-}) {
-  const params = await searchParams;
-
+const ErrorContent = ({ params }: { params: { error: string } }) => {
   return (
     <>
       {params?.error === "You are not an allowed tester" ? (
@@ -30,7 +23,7 @@ async function ErrorContent({
       )}
     </>
   );
-}
+};
 
 const Page = async ({
   searchParams,
@@ -51,9 +44,7 @@ const Page = async ({
         <div className="flex flex-col justify-center items-center gap-2">
           <h1 className="text-2xl font-semibold font-sans">Oops!</h1> <Logo />
           <div>
-            <Suspense>
-              <ErrorContent searchParams={searchParams} />
-            </Suspense>
+            <ErrorContent params={params} />
           </div>
         </div>
 
